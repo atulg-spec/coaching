@@ -1,0 +1,59 @@
+{% extends 'base_student.html' %}
+{% block title %}My Timetable — Success Coaching{% endblock %}
+{% block content %}
+
+<h2 class="text-xl font-bold text-dark mb-5">📅 My Timetable</h2>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    {% for batch in my_batches %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-5 bg-gradient-to-r from-orange-50 to-white border-b border-gray-100">
+            <h3 class="font-bold text-dark text-lg">{{ batch.batch_name }}</h3>
+            <p class="text-xs text-gray-500 mt-1 font-mono">{{ batch.batch_code }}</p>
+        </div>
+        <div class="p-5 space-y-3 text-sm">
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Class</span>
+                <span class="font-semibold">Class {{ batch.class_level }} — {{ batch.board }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Subject</span>
+                <span class="font-semibold">
+                    {% for sub in batch.subjects.all %}
+                        {{ sub.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}—{% endfor %}
+                </span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Days</span>
+                <span class="font-semibold">{{ batch.get_days_display }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Time</span>
+                <span class="font-semibold">{{ batch.start_time|time:"H:i" }} – {{ batch.end_time|time:"H:i" }}</span>
+            </div>
+            {% if batch.room_number %}
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Room</span>
+                <span class="font-semibold">{{ batch.room_number }}</span>
+            </div>
+            {% endif %}
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Teacher</span>
+                <span class="font-semibold">{{ batch.teacher.user.get_full_name|default:"—" }}</span>
+            </div>
+            <div class="flex justify-between py-1">
+                <span class="text-gray-500">Monthly Fee</span>
+                <span class="font-bold text-green-700">₹{{ batch.monthly_fee }}</span>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-2 bg-white rounded-xl p-12 text-center text-gray-400">
+        <p class="text-4xl mb-3">📚</p>
+        <p>You are not enrolled in any batch yet.</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

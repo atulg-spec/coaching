@@ -1,0 +1,202 @@
+{% extends base_template %}
+{% block page_title %}Batch Details: {{ batch.batch_name }}{% endblock %}
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <a href="{% url 'batch_list' %}" class="text-gray-500 hover:text-primary transition">&larr; Back to List</a>
+    <a href="{% url 'batch_edit' batch.pk %}" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded font-medium hover:bg-gray-50 transition shadow-sm">Edit Batch</a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden lg:col-span-1">
+        <div class="p-6 bg-gradient-to-br from-gray-50 to-orange-50 border-b border-gray-100 text-center">
+            <h2 class="text-2xl font-bold text-dark">{{ batch.batch_name }}</h2>
+            <p class="text-primary font-mono mt-1">{{ batch.batch_code }}</p>
+        </div>
+        <div class="p-6 space-y-4 text-sm">
+            <div class="flex justify-between border-b border-gray-50 pb-2">
+                <span class="text-gray-500">Teacher</span>
+                <span class="font-medium">{{ batch.teacher.user.get_full_name|default:"Unassigned" }}</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-50 pb-2">
+                <span class="text-gray-500">Subject</span>
+                <span class="font-medium">
+                    {% for sub in batch.subjects.all %}
+                        {{ sub.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}N/A{% endfor %}
+                </span>
+            </div>
+            <div class="flex justify-between border-b border-gray-50 pb-2">
+                <span class="text-gray-500">Schedule</span>
+                <span class="font-medium">{{ batch.get_days_display }}</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-50 pb-2">
+                <span class="text-gray-500">Timing</span>
+                <span class="font-medium">{{ batch.start_time|time:"H:i" }} - {{ batch.end_time|time:"H:i" }}</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-50 pb-2">
+                <span class="text-gray-500">Monthly Fee</span>
+                <span class="font-medium text-green-700">₹{{ batch.monthly_fee }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lg:col-span-2 space-y-8">
+<!-- Students Tab -->
+<div class="bg-white rounded-2xl shadow p-6">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-lg font-bold text-gray-800">
+      Students 
+      <span class="text-sm font-normal text-gray-500 ml-2">
+        {{ batch.students.count }}/{{ batch.max_students }}
+      </span>
+    </h3>
+    {% if user.role == 'admin' %}
+    <button 
+      onclick="document.getElementById('addStudentModal').classList.remove('hidden')"
+      class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition">
+      + Add Student
+    </button>
+    {% endif %}
+  </div>
+
+  <!-- Student Table -->
+  {% if batch.students.exists %}
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-orange-50 text-orange-800">
+          <th class="text-left p-3 rounded-l-lg">Student</th>
+          <th class="text-left p-3">ID</th>
+          <th class="text-left p-3">Class</th>
+          <th class="text-left p-3">Board</th>
+          <th class="text-left p-3">Parent Phone</th>
+          {% if user.role == 'admin' %}
+          <th class="text-left p-3 rounded-r-lg">Action</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for student in batch.students.all %}
+        <tr class="hover:bg-gray-50">
+          <td class="p-3">
+            <a href="{% url 'student_detail' student.id %}" 
+               class="font-medium text-gray-800 hover:text-orange-600">
+              {{ student.user.get_full_name }}
+            </a>
+          </td>
+          <td class="p-3 text-gray-500">{{ student.student_id }}</td>
+          <td class="p-3">Class {{ student.current_class }}</td>
+          <td class="p-3">
+            <span class="px-2 py-1 rounded-full text-xs font-medium
+              {% if student.board == 'CBSE' %}bg-blue-100 text-blue-700
+              {% else %}bg-green-100 text-green-700{% endif %}">
+              {{ student.board }}
+            </span>
+          </td>
+          <td class="p-3 text-gray-600">{{ student.parent_phone }}</td>
+          {% if user.role == 'admin' %}
+          <td class="p-3">
+            <form method="post" 
+                  action="{% url 'batch_remove_student' batch.id student.id %}"
+                  onsubmit="return confirm('Remove {{ student.user.get_full_name }} from this batch?')">
+              {% csrf_token %}
+              <button type="submit" 
+                      class="text-red-500 hover:text-red-700 text-xs font-medium">
+                Remove
+              </button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="text-center py-12 text-gray-400">
+    <p class="text-4xl mb-2">👨‍🎓</p>
+    <p class="font-medium">No students in this batch yet.</p>
+    <p class="text-sm">Click "Add Student" to enroll students.</p>
+  </div>
+  {% endif %}
+</div>
+
+
+<!-- Add Student Modal -->
+{% if user.role == 'admin' %}
+<div id="addStudentModal" 
+     class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between p-6 border-b">
+      <h3 class="text-lg font-bold text-gray-800">Add Student to {{ batch.batch_name }}</h3>
+      <button onclick="document.getElementById('addStudentModal').classList.add('hidden')"
+              class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+
+    <!-- Search -->
+    <div class="p-4 border-b">
+      <input type="text" 
+             id="studentSearch"
+             placeholder="Search by name or student ID..."
+             oninput="filterStudents(this.value)"
+             class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
+    </div>
+
+    <!-- Student List -->
+    <div class="overflow-y-auto flex-1 p-4" id="studentList">
+      <form method="post" action="{% url 'batch_add_student' batch.id %}">
+        {% csrf_token %}
+        <div class="space-y-2" id="studentOptions">
+          {% for student in available_students %}
+          <label class="student-item flex items-center gap-3 p-3 rounded-xl hover:bg-orange-50 cursor-pointer border border-transparent hover:border-orange-200 transition"
+                 data-name="{{ student.user.get_full_name|lower }}"
+                 data-id="{{ student.student_id|lower }}">
+            <input type="radio" name="student_id" value="{{ student.id }}" class="accent-orange-500">
+            <div class="flex-1">
+              <p class="font-medium text-gray-800 text-sm">{{ student.user.get_full_name }}</p>
+              <p class="text-xs text-gray-500">{{ student.student_id }} &middot; Class {{ student.current_class }} &middot; {{ student.board }}</p>
+            </div>
+          </label>
+          {% empty %}
+          <p class="text-center text-gray-400 py-6 text-sm">
+            No available students for Class {{ batch.class_level }}.
+          </p>
+          {% endfor %}
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="pt-4 flex gap-3">
+          <button type="button"
+                  onclick="document.getElementById('addStudentModal').classList.add('hidden')"
+                  class="flex-1 border border-gray-300 text-gray-700 py-2 rounded-xl text-sm font-medium hover:bg-gray-50">
+            Cancel
+          </button>
+          <button type="submit"
+                  class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl text-sm font-medium transition">
+            Add to Batch
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function filterStudents(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('.student-item').forEach(item => {
+    const name = item.dataset.name;
+    const id = item.dataset.id;
+    item.style.display = (name.includes(q) || id.includes(q)) ? 'flex' : 'none';
+  });
+}
+</script>
+{% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends base_template %}
+{% block page_title %}Students{% endblock %}
+{% block page_actions %}
+<a href="{% url 'student_add' %}"
+    class="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-orange-600 transition shadow-sm">+
+    Add Student</a>
+{% endblock %}
+{% block content %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <!-- Search and Add Button Section -->
+    <div class="p-4 border-b border-gray-100 bg-gray-50">
+        <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <form method="GET" class="flex gap-2 w-full sm:w-auto">
+                <input type="text" name="q" value="{{ query }}" placeholder="Search by name or student ID…"
+                    class="border border-gray-300 rounded-lg px-4 py-2 text-sm flex-1 sm:w-72 focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                <button type="submit"
+                    class="bg-dark text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition">
+                    Search
+                </button>
+                {% if query %}
+                <a href="{% url 'student_list' %}"
+                    class="px-4 py-2 text-sm text-gray-500 hover:text-primary transition">
+                    Clear
+                </a>
+                {% endif %}
+            </form>
+            <a href="/dashboard/students/add/"
+                class="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-orange-600 transition shadow-sm whitespace-nowrap w-full sm:w-auto text-center">
+                + Add Student
+            </a>
+        </div>
+    </div>
+
+    <!-- Desktop Table View (hidden on mobile) -->
+    <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide border-b border-gray-100">
+                    <th class="px-6 py-3 font-semibold">Student ID</th>
+                    <th class="px-6 py-3 font-semibold">Name</th>
+                    <th class="px-6 py-3 font-semibold">Class & Board</th>
+                    <th class="px-6 py-3 font-semibold">Parent Phone</th>
+                    <th class="px-6 py-3 font-semibold">Status</th>
+                    <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-gray-50">
+                {% for student in students %}
+                <tr class="hover:bg-orange-50/30 transition">
+                    <td class="px-6 py-3 font-mono text-xs text-primary font-semibold">{{ student.student_id }}</td>
+                    <td class="px-6 py-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-primary font-bold text-xs shrink-0">
+                                {{ student.user.first_name|first|upper }}{{ student.user.last_name|first|upper }}
+                            </div>
+                            <span class="font-semibold text-dark">{{ student.user.get_full_name }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-3">
+                        Class {{ student.current_class }}
+                        <span class="ml-1 bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">
+                            {{student.board}}
+                        </span>
+                    </td>
+                    <td class="px-6 py-3 text-gray-600">{{ student.parent_phone }}</td>
+                    <td class="px-6 py-3">
+                        {% if student.is_active %}
+                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Active</span>
+                        {% else %}
+                        <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-3 text-right space-x-3">
+                        <a href="{% url 'student_detail' student.pk %}"
+                            class="text-secondary hover:text-teal-800 font-semibold text-xs">View</a>
+                        <a href="{% url 'student_edit' student.pk %}"
+                            class="text-gray-400 hover:text-gray-700 font-semibold text-xs">Edit</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-6 py-16 text-center">
+                        <p class="text-4xl mb-3">👨‍🎓</p>
+                        <p class="text-gray-500 font-medium">No students found.</p>
+                        <a href="{% url 'student_add' %}"
+                            class="mt-2 inline-block text-primary hover:underline text-sm">Add student →</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile Cards View (visible only on mobile) -->
+    <div class="block md:hidden divide-y divide-gray-100">
+        {% for student in students %}
+        <div class="p-4 hover:bg-orange-50/30 transition">
+            <!-- Header with Student ID and Status -->
+            <div class="flex justify-between items-start mb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-primary font-bold text-sm shrink-0">
+                        {{ student.user.first_name|first|upper }}{{ student.user.last_name|first|upper }}
+                    </div>
+                    <div>
+                        <div class="font-semibold text-dark text-base">{{ student.user.get_full_name }}</div>
+                        <div class="font-mono text-xs text-primary font-semibold">{{ student.student_id }}</div>
+                    </div>
+                </div>
+                {% if student.is_active %}
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Active</span>
+                {% else %}
+                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">Inactive</span>
+                {% endif %}
+            </div>
+
+            <!-- Class and Board -->
+            <div class="mb-2">
+                <span class="text-xs text-gray-500">Class & Board:</span>
+                <div class="mt-1">
+                    <span class="font-medium text-dark">Class {{ student.current_class }}</span>
+                    <span class="ml-1 bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">
+                        {{student.board}}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Parent Phone -->
+            <div class="mb-3">
+                <span class="text-xs text-gray-500">Parent Phone:</span>
+                <div class="text-gray-600 text-sm">{{ student.parent_phone }}</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-4 pt-2">
+                <a href="{% url 'student_detail' student.pk %}"
+                    class="text-secondary hover:text-teal-800 font-semibold text-sm">View Details</a>
+                <a href="{% url 'student_edit' student.pk %}"
+                    class="text-gray-400 hover:text-gray-700 font-semibold text-sm">Edit</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="px-6 py-16 text-center">
+            <p class="text-4xl mb-3">👨‍🎓</p>
+            <p class="text-gray-500 font-medium">No students found.</p>
+            <a href="{% url 'student_add' %}"
+                class="mt-2 inline-block text-primary hover:underline text-sm">Add students →</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

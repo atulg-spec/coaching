@@ -1,0 +1,112 @@
+{% extends base_template %}
+{% block page_title %}Overview{% endblock %}
+{% block content %}
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
+    <a href="{% url 'student_list' %}" class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all group">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Students</p>
+                <p class="text-3xl font-bold text-dark mt-1">{{ total_students }}</p>
+            </div>
+            <span class="text-3xl">👨‍🎓</span>
+        </div>
+        <p class="text-xs text-primary mt-2 group-hover:underline">View all →</p>
+    </a>
+
+    <a href="{% url 'batch_list' %}" class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all group">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Active Batches</p>
+                <p class="text-3xl font-bold text-dark mt-1">{{ total_batches }}</p>
+            </div>
+            <span class="text-3xl">📚</span>
+        </div>
+        <p class="text-xs text-primary mt-2 group-hover:underline">View all →</p>
+    </a>
+
+    <a href="{% url 'attendance_reports' %}" class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all group">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Today's Classes</p>
+                <p class="text-3xl font-bold text-dark mt-1">{{ today_sessions }}</p>
+            </div>
+            <span class="text-3xl">✅</span>
+        </div>
+        <p class="text-xs text-primary mt-2 group-hover:underline">Mark attendance →</p>
+    </a>
+
+    <a href="{% url 'dues_report' %}" class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all group">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Pending Dues</p>
+                <p class="text-3xl font-bold {% if pending_dues > 0 %}text-red-600{% else %}text-dark{% endif %} mt-1">{{ pending_dues }}</p>
+            </div>
+            <span class="text-3xl">⚠️</span>
+        </div>
+        <p class="text-xs text-primary mt-2 group-hover:underline">View dues →</p>
+    </a>
+
+    <a href="{% url 'inquiry_list' %}" class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all group">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">New Inquiries</p>
+                <p class="text-3xl font-bold {% if new_inquiries > 0 %}text-orange-500{% else %}text-dark{% endif %} mt-1">{{ new_inquiries }}</p>
+            </div>
+            <span class="text-3xl">📋</span>
+        </div>
+        <p class="text-xs text-primary mt-2 group-hover:underline">View inquiries →</p>
+    </a>
+</div>
+
+<!-- Bottom Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Today's Batches -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+            <h2 class="font-bold text-dark">Today's Schedule</h2>
+            <a href="{% url 'batch_list' %}" class="text-primary text-sm font-medium hover:underline">View all</a>
+        </div>
+        <div class="divide-y divide-gray-50">
+            {% for batch in todays_batches %}
+            <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+                <div>
+                    <p class="font-semibold text-dark text-sm">{{ batch.batch_name }}</p>
+                    <p class="text-xs text-gray-500">{{ batch.start_time|time:"H:i" }} – {{ batch.end_time|time:"H:i" }} &nbsp;|&nbsp; {{ batch.get_days_display }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{{ batch.current_strength }} students</span>
+                    <a href="{% url 'mark_attendance' batch.pk %}" class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-orange-600 transition font-medium">Mark</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="px-6 py-8 text-center text-gray-400 text-sm">No batches created yet. <a href="{% url 'batch_add' %}" class="text-primary hover:underline">Add a batch →</a></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Recent Payments -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+            <h2 class="font-bold text-dark">Recent Payments</h2>
+            <a href="{% url 'payment_history' %}" class="text-primary text-sm font-medium hover:underline">View all</a>
+        </div>
+        <div class="divide-y divide-gray-50">
+            {% for payment in recent_payments %}
+            <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+                <div>
+                    <p class="font-semibold text-dark text-sm">{{ payment.student.user.get_full_name }}</p>
+                    <p class="text-xs text-gray-500">{{ payment.batch.batch_name }} &nbsp;|&nbsp; {{ payment.month|date:"M Y" }}</p>
+                </div>
+                <span class="text-sm font-bold text-green-700">₹{{ payment.amount_paid }}</span>
+            </div>
+            {% empty %}
+            <div class="px-6 py-8 text-center text-gray-400 text-sm">No payments recorded yet. <a href="{% url 'collect_fee' %}" class="text-primary hover:underline">Collect a fee →</a></div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

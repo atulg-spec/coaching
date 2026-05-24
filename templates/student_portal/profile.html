@@ -1,0 +1,71 @@
+{% extends 'base_student.html' %}
+{% block title %}My Profile — Success Coaching{% endblock %}
+{% block content %}
+
+<h2 class="text-xl font-bold text-dark mb-5">👤 My Profile</h2>
+
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-8 text-center bg-gradient-to-b from-orange-50 to-white border-b border-gray-100">
+            <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 shadow-lg">
+                {{ student.user.first_name|first|upper }}{{ student.user.last_name|first|upper }}
+            </div>
+            <h2 class="text-2xl font-bold text-dark">{{ student.user.get_full_name }}</h2>
+            <p class="text-primary font-mono text-sm mt-1">{{ student.student_id }}</p>
+            <div class="flex justify-center gap-2 mt-3">
+                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">Class {{ student.current_class }}</span>
+                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-semibold">{{ student.board }}</span>
+            </div>
+        </div>
+        <div class="p-6 space-y-4 text-sm">
+            <h3 class="font-bold text-gray-500 text-xs uppercase tracking-wide">Personal Details</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2 sm:col-span-1">
+                    <p class="text-gray-400 text-xs mb-0.5">Date of Birth</p>
+                    <p class="font-semibold text-dark">{{ student.date_of_birth|date:"d F Y" }}</p>
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <p class="text-gray-400 text-xs mb-0.5">School</p>
+                    <p class="font-semibold text-dark">{{ student.school_name }}</p>
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <p class="text-gray-400 text-xs mb-0.5">Email</p>
+                    <p class="font-semibold text-dark">{{ student.user.email|default:"—" }}</p>
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <p class="text-gray-400 text-xs mb-0.5">Admission Date</p>
+                    <p class="font-semibold text-dark">{{ student.admission_date|date:"d M Y" }}</p>
+                </div>
+                <div class="col-span-2">
+                    <p class="text-gray-400 text-xs mb-0.5">Address</p>
+                    <p class="font-semibold text-dark">{{ student.address }}</p>
+                </div>
+            </div>
+
+            <hr class="border-gray-100">
+            <h3 class="font-bold text-gray-500 text-xs uppercase tracking-wide">Parent / Guardian</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2 sm:col-span-1">
+                    <p class="text-gray-400 text-xs mb-0.5">Name</p>
+                    <p class="font-semibold text-dark">{{ student.parent_name }}</p>
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <p class="text-gray-400 text-xs mb-0.5">Phone</p>
+                    <p class="font-semibold text-dark">{{ student.parent_phone }}</p>
+                </div>
+                {% if student.parent_email %}
+                <div class="col-span-2 sm:col-span-1">
+                    <p class="text-gray-400 text-xs mb-0.5">Email</p>
+                    <p class="font-semibold text-dark">{{ student.parent_email }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="pt-4 text-xs text-gray-400 text-center">
+                To update your profile, please contact the institute office.
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

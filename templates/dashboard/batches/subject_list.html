@@ -1,0 +1,43 @@
+{% extends 'base_dashboard.html' %}
+
+{% block title %}Subjects — Success Coaching{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Subjects</h1>
+        <a href="{% url 'subject_add' %}" class="bg-primary hover:bg-orange-600 text-white px-4 py-2 rounded shadow font-medium transition-colors">
+            + Add Subject
+        </a>
+    </div>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-200">
+                    <th class="p-4 font-semibold text-gray-600">Subject Name</th>
+                    <th class="p-4 font-semibold text-gray-600">Code</th>
+                    <th class="p-4 font-semibold text-gray-600">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subjects %}
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="p-4 font-medium text-gray-800">{{ subject.name }}</td>
+                    <td class="p-4 text-gray-600">{{ subject.code }}</td>
+                    <td class="p-4">
+                        <a href="{% url 'subject_edit' subject.pk %}" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Edit</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="p-8 text-center text-gray-500">
+                        No subjects found. Add a subject to get started.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends base_template %}
+{% block page_title %}Process Staff Salary{% endblock %}
+{% block page_actions %}
+<a href="{% url 'staff_salary_history' %}"
+    class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-primary transition-colors duration-200 group">
+    View History
+    <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+    </svg>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-1 sm:px-1 lg:px-1 py-6 space-y-6">
+    <!-- Premium Banner -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-emerald-50/40 to-transparent"></div>
+            <div class="relative p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                <div class="flex items-start gap-4">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                        💸
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 tracking-tight">Staff Salaries</h2>
+                        <div class="flex flex-wrap items-center gap-2 mt-1.5 text-sm text-gray-500">
+                            <span>Process monthly salary payouts for your staff</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 shrink-0">
+                    <form method="GET" class="flex gap-2 items-center">
+                        <label for="month" class="text-sm font-semibold text-gray-600">Select Month:</label>
+                        <input type="month" name="month" id="month" value="{{ month_str }}"
+                            class="border border-gray-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                            onchange="this.form.submit()">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Salaries List -->
+    <div class="grid gap-6">
+        {% for item in staff_data %}
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden p-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-700 text-lg font-bold shadow-sm">
+                        {{ item.staff.user.first_name|first|upper }}
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-gray-800">{{ item.staff.user.get_full_name }}</h3>
+                        <p class="text-sm text-gray-500">{{ item.staff.designation }}</p>
+                    </div>
+                </div>
+                <div class="text-right flex flex-col items-end">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Monthly Salary</p>
+                    <p class="font-bold text-lg text-gray-900">₹{{ item.staff.salary }}</p>
+                </div>
+            </div>
+
+            <div class="mt-6 border-t border-gray-100 pt-6">
+                {% if item.salary_record and item.salary_record.status == 'paid' %}
+                <div class="bg-green-50 rounded-xl p-4 flex items-center justify-between border border-green-100">
+                    <div>
+                        <p class="text-green-800 font-semibold text-sm">Salary Processed for {{ selected_month|date:"F Y" }}</p>
+                        <p class="text-green-600 text-xs mt-1">Paid ₹{{ item.salary_record.amount_paid }} on {{ item.salary_record.payment_date|date:"d M Y" }} via {{ item.salary_record.get_payment_mode_display|default:'Unknown' }}</p>
+                        {% if item.salary_record.remarks %}
+                            <p class="text-green-600/80 text-xs mt-1 italic">Note: {{ item.salary_record.remarks }}</p>
+                        {% endif %}
+                    </div>
+                    <span class="bg-green-500 text-white p-2 rounded-full shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </span>
+                </div>
+                {% else %}
+                <form method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    {% csrf_token %}
+                    <input type="hidden" name="staff_id" value="{{ item.staff.id }}">
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Amount to Pay (₹)</label>
+                        <input type="number" step="0.01" name="amount_paid" value="{{ item.staff.salary }}" required
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Payment Mode</label>
+                        <select name="payment_mode" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="upi">UPI</option>
+                            <option value="cash">Cash</option>
+                            <option value="cheque">Cheque</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Remarks (Optional)</label>
+                        <input type="text" name="remarks" placeholder="Bonus, deduction..."
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-bold hover:from-emerald-600 hover:to-emerald-700 transition shadow-md text-sm">
+                            Mark Paid
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center text-gray-500">
+            No active staff found.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

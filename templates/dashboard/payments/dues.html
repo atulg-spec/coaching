@@ -1,0 +1,39 @@
+{% extends base_template %}
+{% block page_title %}Pending Dues{% endblock %}
+{% block content %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+        <h3 class="text-lg font-bold text-dark">Dues Report</h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-white text-gray-500 text-sm border-b border-gray-100">
+                    <th class="p-4 font-medium">Student</th>
+                    <th class="p-4 font-medium">Batch</th>
+                    <th class="p-4 font-medium">Month</th>
+                    <th class="p-4 font-medium">Balance Due</th>
+                    <th class="p-4 font-medium text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-gray-100">
+                {% for payment in pending_payments %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 font-bold text-dark">{{ payment.student.user.get_full_name }}</td>
+                    <td class="p-4">{{ payment.batch.batch_name }}</td>
+                    <td class="p-4">{{ payment.month|date:"F Y" }}</td>
+                    <td class="p-4 text-red-600 font-bold">₹{{ payment.balance_due }}</td>
+                    <td class="p-4 text-right">
+                        <a href="https://wa.me/91{{ payment.student.parent_phone }}?text=Dear%20Parent,%20this%20is%20a%20gentle%20reminder%20that%20the%20fee%20of%20Rs.{{ payment.balance_due }}%20for%20{{ payment.month|date:'F' }}%20is%20still%20pending.%20Kindly%20make%20the%20payment%20at%20the%20earliest.%20Thank%20you." target="_blank" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 transition">WhatsApp Reminder</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-8 text-center text-gray-500">No pending dues. Great job!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

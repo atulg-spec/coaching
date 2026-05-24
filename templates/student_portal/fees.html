@@ -1,0 +1,55 @@
+{% extends 'base_student.html' %}
+{% block title %}My Fees — Success Coaching{% endblock %}
+{% block content %}
+
+<h2 class="text-xl font-bold text-dark mb-5">💰 My Fee History</h2>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 border-b border-gray-100 text-gray-500 text-xs uppercase">
+                <tr>
+                    <th class="px-5 py-3 font-semibold">Month</th>
+                    <th class="px-5 py-3 font-semibold">Batch</th>
+                    <th class="px-5 py-3 font-semibold text-right">Amount Due</th>
+                    <th class="px-5 py-3 font-semibold text-right">Paid</th>
+                    <th class="px-5 py-3 font-semibold text-center">Status</th>
+                    <th class="px-5 py-3 font-semibold">Mode</th>
+                    <th class="px-5 py-3 font-semibold">Paid On</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for payment in payments %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-5 py-3 font-semibold text-dark">{{ payment.month|date:"F Y" }}</td>
+                    <td class="px-5 py-3 text-gray-600">{{ payment.batch.batch_name }}</td>
+                    <td class="px-5 py-3 text-right text-gray-600">₹{{ payment.amount_due }}</td>
+                    <td class="px-5 py-3 text-right font-bold text-dark">₹{{ payment.amount_paid }}</td>
+                    <td class="px-5 py-3 text-center">
+                        {% if payment.status == 'paid' %}
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">✔ Paid</span>
+                        {% elif payment.status == 'pending' %}
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">⏳ Pending</span>
+                        {% elif payment.status == 'partial' %}
+                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold">◑ Partial</span>
+                        {% else %}
+                            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold">Waived</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-5 py-3 text-gray-500 text-xs capitalize">{{ payment.payment_mode|default:"—" }}</td>
+                    <td class="px-5 py-3 text-gray-500 text-xs">{{ payment.payment_date|date:"d M Y"|default:"—" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="px-5 py-12 text-center">
+                        <p class="text-4xl mb-3">💳</p>
+                        <p class="text-gray-400">No fee records found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

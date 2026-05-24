@@ -1,0 +1,211 @@
+{% extends base_template %}
+{% block page_title %}{{ staff.user.get_full_name }}{% endblock %}
+{% block page_actions %}
+    <div class="flex gap-2">
+        <a href="{% url 'staff_list' %}" class="text-sm text-gray-500 hover:text-secondary transition">&larr; Staff</a>
+        <a href="{% url 'staff_edit' staff.pk %}" class="bg-white border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition shadow-sm">Edit Profile</a>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Profile Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden lg:col-span-1">
+        <div class="p-6 text-center bg-gradient-to-b from-teal-50 to-white border-b border-gray-100">
+            <div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg">
+                {{ staff.user.first_name|first|upper }}{{ staff.user.last_name|first|upper }}
+            </div>
+            <h2 class="text-xl font-bold text-dark">{{ staff.user.get_full_name }}</h2>
+            <p class="text-secondary font-mono text-sm mt-1">{{ staff.employee_id }}</p>
+            <div class="mt-3 inline-block bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-xs font-semibold">
+                {{ staff.designation }}
+            </div>
+            {% if staff.is_active %}
+                <span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold ml-1">Active</span>
+            {% else %}
+                <span class="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold ml-1">Inactive</span>
+            {% endif %}
+        </div>
+        <div class="p-5 space-y-3 text-sm">
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Qualification</span>
+                <span class="font-medium text-right max-w-[60%]">{{ staff.qualification }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Date of Joining</span>
+                <span class="font-medium">{{ staff.date_of_joining|date:"d M Y" }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Phone</span>
+                <span class="font-medium">{{ staff.user.phone|default:"—" }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Email</span>
+                <span class="font-medium truncate max-w-[60%]">{{ staff.user.email|default:"—" }}</span>
+            </div>
+             <div class="flex justify-between py-1 border-b border-gray-50">
+                <span class="text-gray-500">Salary</span>
+                <span class="font-medium text-green-700 font-bold">₹{{ staff.salary }}</span>
+            </div>
+            <div class="pt-2">
+                <p class="text-gray-500 text-xs mb-1">Address</p>
+                <p class="font-medium text-sm leading-relaxed">{{ staff.address|default:"—" }}</p>
+            </div>
+            <div class="pt-2">
+                <p class="text-gray-500 text-xs mb-1">Emergency Contact</p>
+                <p class="font-medium text-sm leading-relaxed">{{ staff.emergency_contact|default:"—" }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-dark">Subject Expertise</h3>
+            </div>
+            <div class="p-6 text-gray-700">
+                <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded font-medium">{{ staff.subject_expertise }}</span>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 bg-gray-50">
+                <h3 class="text-lg font-bold text-dark">Assigned Batches</h3>
+            </div>
+            <div class="divide-y divide-gray-50 text-sm">
+                 {% for batch in staff.batch_set.all %}
+                 <div class="px-6 py-3 flex justify-between items-center hover:bg-gray-50 transition text-sm">
+                    <div>
+                        <p class="font-semibold text-dark">{{ batch.batch_name }}</p>
+                        <p class="text-xs text-gray-500">{{ batch.get_days_display }} | {{ batch.start_time|time:"H:i" }} – {{ batch.end_time|time:"H:i" }}</p>
+                    </div>
+                    <div class="text-right">
+                        <a href="{% url 'batch_detail' batch.pk %}" class="text-xs text-secondary hover:underline">View batch →</a>
+                    </div>
+                </div>
+                 {% empty %}
+                <div class="p-6 text-center text-gray-500">
+                    No batches assigned yet. Use the Django Admin to assign this teacher to a batch.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Attendance Stats -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6 p-6 flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center gap-4 mb-4 md:mb-0">
+                <div class="relative w-16 h-16 flex items-center justify-center bg-gray-50 rounded-full border-[3px] border-green-500 shadow-inner">
+                    <span class="text-lg font-bold text-gray-800">{{ attendance_stats.percentage }}<span class="text-sm text-gray-500">%</span></span>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-dark">Attendance Overview</h3>
+                    <p class="text-sm text-gray-500">{{ attendance_stats.total }} total working days recorded</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 sm:gap-6 text-center">
+                <div>
+                    <p class="text-2xl font-bold text-green-600">{{ attendance_stats.present }}</p>
+                    <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold mt-1">Presents</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-red-600">{{ attendance_stats.absent }}</p>
+                    <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold mt-1">Absents</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-amber-500">{{ attendance_stats.half_day }}</p>
+                    <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold mt-1">Half Days</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-blue-500">{{ attendance_stats.leave }}</p>
+                    <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold mt-1">Leaves</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Attendance -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-dark">Recent Attendance</h3>
+                <a href="{% url 'staff_attendance_reports' %}?staff_id={{ staff.id }}" class="text-xs font-semibold text-primary hover:underline">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-gray-500 uppercase tracking-wider text-xs">
+                            <th class="px-6 py-3 font-semibold">Date</th>
+                            <th class="px-6 py-3 font-semibold">Status</th>
+                            <th class="px-6 py-3 font-semibold">In Time</th>
+                            <th class="px-6 py-3 font-semibold">Out Time</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for record in attendance_records %}
+                        <tr class="hover:bg-gray-50/50 transition">
+                            <td class="px-6 py-3 text-gray-800 font-medium">{{ record.date|date:"d M Y" }}</td>
+                            <td class="px-6 py-3">
+                                {% if record.status == 'present' %}
+                                    <span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-semibold border border-green-200">Present</span>
+                                {% elif record.status == 'absent' %}
+                                    <span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-semibold border border-red-200">Absent</span>
+                                {% elif record.status == 'half_day' %}
+                                    <span class="px-2 py-1 bg-amber-50 text-amber-700 rounded text-xs font-semibold border border-amber-200">Half Day</span>
+                                {% else %}
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-semibold border border-blue-200">Leave</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-3 text-gray-600">{{ record.in_time|time:"h:i A"|default:"-" }}</td>
+                            <td class="px-6 py-3 text-gray-600">{{ record.out_time|time:"h:i A"|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                No attendance records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Salary History -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-6">
+            <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-dark">Salary History</h3>
+                <a href="{% url 'staff_salary_history' %}?staff_id={{ staff.id }}" class="text-xs font-semibold text-primary hover:underline">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-gray-500 uppercase tracking-wider text-xs">
+                            <th class="px-6 py-3 font-semibold">Amount Paid</th>
+                            <th class="px-6 py-3 font-semibold">Date</th>
+                            <th class="px-6 py-3 font-semibold">Mode</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for salary in salary_records %}
+                        <tr class="hover:bg-gray-50/50 transition">
+                            <td class="px-6 py-3 text-green-700 font-bold">₹{{ salary.amount_paid }}</td>
+                            <td class="px-6 py-3 text-gray-600">{{ salary.payment_date|date:"d M Y" }}</td>
+                            <td class="px-6 py-3">
+                                <p class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs text-center font-semibold border border-gray-200">
+                                    {{ salary.get_payment_mode_display }}
+                                </p>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                No salary records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

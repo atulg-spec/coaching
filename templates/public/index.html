@@ -1,0 +1,65 @@
+{% extends 'base_public.html' %}
+
+{% block content %}
+<section class="bg-gradient-to-br from-light to-orange-100 py-20 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-5xl md:text-6xl text-dark leading-tight mb-4">
+                    Shape Your Future, <br> <span class="text-primary">One Chapter at a Time</span>
+                </h1>
+                <p class="font-heading text-xl text-secondary mb-6">सफलता की ओर पहला कदम</p>
+                <p class="text-lg text-gray-600 mb-8">Lucknow's trusted coaching for Class 5–12 | CBSE & ICSE</p>
+                <div class="flex space-x-4">
+                    <a href="{% url 'contact' %}" class="bg-gradient-to-r from-primary to-orange-500 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all">Enroll Now</a>
+                    <a href="{% url 'courses' %}" class="bg-white text-primary border-2 border-primary px-8 py-3 rounded-full font-bold hover:bg-orange-50 transition-all">View Batches</a>
+                </div>
+            </div>
+            <div class="hidden md:block">
+                <div class="bg-white p-8 rounded-2xl shadow-xl transform rotate-3 relative border-2 border-orange-100">
+                    <svg class="w-full h-64 text-secondary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-dark text-white py-12 border-b-4 border-accent">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-gray-700">
+            <div><div class="font-accent text-4xl text-accent mb-2">500+</div><div class="text-sm uppercase text-gray-300">Total Students</div></div>
+            <div><div class="font-accent text-4xl text-accent mb-2">20+</div><div class="text-sm uppercase text-gray-300">Batches Running</div></div>
+            <div><div class="font-accent text-4xl text-accent mb-2">10+</div><div class="text-sm uppercase text-gray-300">Years of Excellence</div></div>
+            <div><div class="font-accent text-4xl text-accent mb-2">95%</div><div class="text-sm uppercase text-gray-300">Results Percentage</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-4xl text-dark mb-12 inline-block relative border-b-4 border-primary pb-2">Why Choose Us</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
+                <div class="text-4xl mb-4">👨‍🏫</div>
+                <h3 class="text-xl font-bold text-dark mb-2">Expert Faculty</h3>
+                <p class="text-sm">Highly experienced teachers dedicated to student success.</p>
+            </div>
+            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
+                <div class="text-4xl mb-4">👥</div>
+                <h3 class="text-xl font-bold text-dark mb-2">Small Batch Size</h3>
+                <p class="text-sm">Personalized attention to ensure every concept is clear.</p>
+            </div>
+            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
+                <div class="text-4xl mb-4">📝</div>
+                <h3 class="text-xl font-bold text-dark mb-2">Regular Tests</h3>
+                <p class="text-sm">Weekly assessments to track progress continuously.</p>
+            </div>
+            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
+                <div class="text-4xl mb-4">📱</div>
+                <h3 class="text-xl font-bold text-dark mb-2">Parent Updates</h3>
+                <p class="text-sm">Regular feedback on attendance and test scores.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

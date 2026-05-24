@@ -1,0 +1,49 @@
+<!-- Top bar -->
+<header
+    class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-6 shrink-0 shadow-sm">
+    <!-- Left Section: Logo + Mobile Menu Toggle (optional) -->
+    <div class="flex items-center gap-3">
+        <!-- Mobile menu button (opens sidebar) — requires JS -->
+        <button class="md:hidden text-gray-500 hover:text-gray-700 p-2 -ml-2" id="mobileMenuToggle" aria-label="Menu">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+        </button>
+
+        <!-- Logo -->
+        <a href="/dashboard/" class="flex items-center transition-opacity hover:opacity-80 ml-3 mt-1">
+            <div class="font-heading text-lg text-gray-900 leading-tight">
+                Success Coaching
+                <span class="block text-[11px] text-gray-500 font-sans font-normal tracking-wide">Management
+                    Portal</span>
+            </div>
+        </a>
+    </div>
+
+
+    <!-- Right Section: Date + Optional User/Notifications -->
+    <div class="flex items-center gap-4">
+        <!-- Date display -->
+        <div class="text-sm text-gray-500 hidden sm:block">
+            {% now "l, j M Y" %}
+        </div>
+        <div class="text-sm text-gray-500 sm:hidden">
+            {% now "D, d M" %}
+        </div>
+
+        <!-- Optional: Add user menu, avatar, notifications here -->
+        <!-- 
+        <button class="p-1 rounded-full hover:bg-gray-100">
+            <svg class="w-5 h-5 text-gray-500" ...>Bell icon</svg>
+        </button>
+        <div class="w-8 h-8 rounded-full bg-gray-200"></div>
+        -->
+    </div>
+</header>
+
+<!-- Page header breadcrumb -->
+<div class="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between">
+    <h1 class="text-lg font-bold text-dark">{% block page_title %}Overview{% endblock %}</h1>
+    <div class="flex gap-2">{% block page_actions %}{% endblock %}</div>
+</div>

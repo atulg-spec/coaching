@@ -1,0 +1,558 @@
+{% extends base_template %}
+{% block page_title %}Mark Attendance — {{ batch.batch_name }}{% endblock %}
+{% block page_actions %}
+<a href="{% url 'batch_detail' batch.id %}"
+    class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-primary transition-colors duration-200 group">
+    <svg class="w-4 h-4 transform group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+    </svg>
+    Back to Batch
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-1 sm:px-1 lg:px-1 py-6 space-y-6">
+    <!-- Premium Batch Info Banner -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-orange-50/40 to-transparent"></div>
+            <div class="relative p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                <div class="flex items-start gap-4">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                        📋
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 tracking-tight">{{ batch.batch_name }}</h2>
+                        <div class="flex flex-wrap items-center gap-2 mt-1.5 text-sm text-gray-500">
+                            <span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
+                                </svg>{{ batch.get_board_display|default:batch.board }}</span>
+                            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                            <span>Class {{ batch.class_level }}</span>
+                            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                            <span>{{ batch.get_days_display }}</span>
+                            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                            <span>{{ batch.start_time|time:"H:i" }} – {{ batch.end_time|time:"H:i" }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 shrink-0">
+                    <div
+                        class="bg-blue-50/80 backdrop-blur-sm rounded-xl px-5 py-2.5 text-center border border-blue-100/50 shadow-sm">
+                        <p class="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">Date</p>
+                        <p class="font-bold text-gray-700 text-base">{{ today|date:"d M Y" }}</p>
+                    </div>
+                    <div
+                        class="bg-orange-50/80 backdrop-blur-sm rounded-xl px-5 py-2.5 text-center border border-orange-100/50 shadow-sm">
+                        <p class="text-[11px] font-semibold text-orange-600 uppercase tracking-wider">Enrolled</p>
+                        <p class="font-bold text-gray-800 text-base">{{ student_data|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Form -->
+    <form method="POST" id="attendanceForm" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Topic + Quick Actions Premium Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 sm:p-6">
+            <div class="flex flex-col lg:flex-row gap-5 items-end">
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Topic Covered
+                        <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                            </path>
+                        </svg>
+                        <input type="text" name="topic_covered" value="{{ session.topic_covered }}"
+                            placeholder="e.g., Advanced Calculus — Integration by Parts"
+                            class="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-gray-50/30 hover:bg-white"
+                            required>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 shrink-0 bg-gray-50/70 rounded-xl px-4 py-2 border border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Bulk Actions:</span>
+                    <button type="button" onclick="markAll('present')"
+                        class="group flex items-center gap-1.5 px-3 py-1.5 bg-white border border-green-200 text-green-700 rounded-lg text-xs font-semibold hover:bg-green-50 hover:border-green-300 transition-all duration-200 shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Present All
+                    </button>
+                    <button type="button" onclick="markAll('absent')"
+                        class="group flex items-center gap-1.5 px-3 py-1.5 bg-white border border-red-200 text-red-600 rounded-lg text-xs font-semibold hover:bg-red-50 hover:border-red-300 transition-all duration-200 shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Absent All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Table View (hidden on mobile) -->
+        <div class="hidden md:block bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="bg-gray-50/80 border-b border-gray-100">
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">#
+                            </th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Student
+                            </th>
+                            <th
+                                class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
+                                Present</th>
+                            <th
+                                class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
+                                Absent</th>
+                            <th
+                                class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
+                                Late</th>
+                            <th
+                                class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
+                                Leave</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Remarks
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50" id="studentRows">
+                        {% for item in student_data %}
+                        <tr class="group transition-all duration-150 hover:bg-gray-50/50 att-row"
+                            data-student="{{ item.student.id }}">
+                            <td class="px-6 py-4 text-gray-400 text-sm font-mono font-medium">{{ forloop.counter }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-orange-700 text-sm font-bold shadow-sm">
+                                        {{ item.student.user.first_name|first|upper }}
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">{{ item.student.user.get_full_name }}</p>
+                                        <p class="text-xs text-gray-400 font-mono mt-0.5">{{ item.student.student_id }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            {% with sid=item.student.id %}
+                            <td class="px-6 py-4 text-center">
+                                <label
+                                    class="relative inline-flex items-center justify-center w-9 h-9 rounded-xl cursor-pointer transition-all duration-200 has-[:checked]:bg-green-500 has-[:checked]:shadow-md has-[:checked]:scale-105 hover:bg-green-50">
+                                    <input type="radio" name="status_{{ sid }}" value="present"
+                                        class="sr-only peer status-radio" 
+                                        {% if not item.record or item.record.status == 'present' %}
+                                        checked
+                                        {% endif %}>
+                                    <svg class="w-5 h-5 text-gray-400 peer-checked:text-white transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </label>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <label
+                                    class="relative inline-flex items-center justify-center w-9 h-9 rounded-xl cursor-pointer transition-all duration-200 has-[:checked]:bg-red-500 has-[:checked]:shadow-md has-[:checked]:scale-105 hover:bg-red-50">
+                                    <input type="radio" name="status_{{ sid }}" value="absent"
+                                        class="sr-only peer status-radio" 
+                                        {% if item.record and item.record.status == 'absent' %}
+                                        checked
+                                        {% endif %}>
+                                    <svg class="w-5 h-5 text-gray-400 peer-checked:text-white transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </label>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <label
+                                    class="relative inline-flex items-center justify-center w-9 h-9 rounded-xl cursor-pointer transition-all duration-200 has-[:checked]:bg-amber-400 has-[:checked]:shadow-md has-[:checked]:scale-105 hover:bg-amber-50">
+                                    <input type="radio" name="status_{{ sid }}" value="late"
+                                        class="sr-only peer status-radio" 
+                                        {% if item.record and item.record.status == 'late' %}
+                                        checked
+                                        {% endif %}>
+                                    <svg class="w-5 h-5 text-gray-400 peer-checked:text-white transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </label>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <label
+                                    class="relative inline-flex items-center justify-center w-9 h-9 rounded-xl cursor-pointer transition-all duration-200 has-[:checked]:bg-blue-400 has-[:checked]:shadow-md has-[:checked]:scale-105 hover:bg-blue-50">
+                                    <input type="radio" name="status_{{ sid }}" value="leave"
+                                        class="sr-only peer status-radio" 
+                                        {% if item.record and item.record.status == 'leave' %}
+                                        checked
+                                        {% endif %}>
+                                    <svg class="w-5 h-5 text-gray-400 peer-checked:text-white transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                        </path>
+                                    </svg>
+                                </label>
+                            </td>
+                            {% endwith %}
+
+                            <td class="px-6 py-4">
+                                <input type="text" name="remarks_{{ item.student.id }}"
+                                    value="{{ item.record.remarks|default:'' }}" placeholder="Add note..."
+                                    class="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-gray-50/30 hover:bg-white">
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="px-6 py-16 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <div
+                                        class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center text-4xl mb-4">
+                                        📭</div>
+                                    <p class="text-gray-500 font-medium text-lg">No active students enrolled</p>
+                                    <p class="text-gray-400 text-sm mt-1">Add students to this batch to mark attendance
+                                    </p>
+                                    <a href="{% url 'batch_detail' batch.id %}"
+                                        class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-orange-600 transition shadow-sm text-sm font-medium">Manage
+                                        Enrollment →</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mobile Card View (visible only on mobile) -->
+        <div class="md:hidden space-y-4" id="mobileCards">
+            {% for item in student_data %}
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden att-row-mobile"
+                data-student="{{ item.student.id }}">
+                <!-- Student Header -->
+                <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-transparent">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-orange-700 text-base font-bold shadow-sm">
+                            {{ item.student.user.first_name|first|upper }}
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-base">{{ item.student.user.get_full_name }}</p>
+                            <p class="text-xs text-gray-400 font-mono mt-0.5">{{ item.student.student_id }}</p>
+                        </div>
+                        <div class="text-xs text-gray-400">#{{ forloop.counter }}</div>
+                    </div>
+                </div>
+
+                <!-- Status Selection Grid -->
+                <div class="p-4">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Attendance Status</p>
+                    <div class="grid grid-cols-4 sm:grid-cols-4 gap-3">
+                        {% with sid=item.student.id %}
+                        <!-- Present Option -->
+                        <label
+                            class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
+                                    {% if not item.record or item.record.status == 'present' %}border-green-500 bg-green-50{% else %}border-gray-200 bg-white hover:border-green-300{% endif %}">
+                            <input type="radio" name="status_{{ sid }}" value="present"
+                                class="sr-only status-radio-mobile" {% if not item.record or item.record.status == 'present' %}checked{% endif %} onchange="updateStatusCard(this)">
+                            <svg class="w-6 h-6 {% if not item.record or item.record.status == 'present' %}text-green-600{% else %}text-gray-400{% endif %}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span
+                                class="text-xs font-semibold {% if not item.record or item.record.status == 'present' %}text-green-700{% else %}text-gray-600{% endif %}">Present</span>
+                        </label>
+
+                        <!-- Absent Option -->
+                        <label
+                            class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
+                                    {% if item.record and item.record.status == 'absent' %}border-red-500 bg-red-50{% else %}border-gray-200 bg-white hover:border-red-300{% endif %}">
+                            <input type="radio" name="status_{{ sid }}" value="absent"
+                                class="sr-only status-radio-mobile" {% if item.record and item.record.status == 'absent' %}checked{% endif %} onchange="updateStatusCard(this)">
+                            <svg class="w-6 h-6 {% if item.record and item.record.status == 'absent' %}text-red-600{% else %}text-gray-400{% endif %}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            <span
+                                class="text-xs font-semibold {% if item.record and item.record.status == 'absent' %}text-red-700{% else %}text-gray-600{% endif %}">Absent</span>
+                        </label>
+
+                        <!-- Late Option -->
+                        <label
+                            class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
+                                    {% if item.record and item.record.status == 'late' %}border-amber-400 bg-amber-50{% else %}border-gray-200 bg-white hover:border-amber-300{% endif %}">
+                            <input type="radio" name="status_{{ sid }}" value="late" class="sr-only status-radio-mobile"
+                                {% if item.record and item.record.status == 'late' %}checked{% endif %}
+                                onchange="updateStatusCard(this)">
+                            <svg class="w-6 h-6 {% if item.record and item.record.status == 'late' %}text-amber-600{% else %}text-gray-400{% endif %}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span
+                                class="text-xs font-semibold {% if item.record and item.record.status == 'late' %}text-amber-700{% else %}text-gray-600{% endif %}">Late</span>
+                        </label>
+
+                        <!-- Leave Option -->
+                        <label
+                            class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
+                                    {% if item.record and item.record.status == 'leave' %}border-blue-400 bg-blue-50{% else %}border-gray-200 bg-white hover:border-blue-300{% endif %}">
+                            <input type="radio" name="status_{{ sid }}" value="leave"
+                                class="sr-only status-radio-mobile" {% if item.record and item.record.status == 'leave' %}checked{% endif %} onchange="updateStatusCard(this)">
+                            <svg class="w-6 h-6 {% if item.record and item.record.status == 'leave' %}text-blue-600{% else %}text-gray-400{% endif %}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                </path>
+                            </svg>
+                            <span
+                                class="text-xs font-semibold {% if item.record and item.record.status == 'leave' %}text-blue-700{% else %}text-gray-600{% endif %}">Leave</span>
+                        </label>
+                        {% endwith %}
+                    </div>
+
+                    <!-- Remarks Field -->
+                    <div class="mt-4">
+                        <label
+                            class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Remarks</label>
+                        <input type="text" name="remarks_{{ item.student.id }}"
+                            value="{{ item.record.remarks|default:'' }}" placeholder="Add optional note..."
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-gray-50/30 hover:bg-white">
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
+                <div class="flex flex-col items-center justify-center">
+                    <div class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center text-4xl mb-4">📭
+                    </div>
+                    <p class="text-gray-500 font-medium text-lg">No active students enrolled</p>
+                    <p class="text-gray-400 text-sm mt-1">Add students to this batch to mark attendance</p>
+                    <a href="{% url 'batch_detail' batch.id %}"
+                        class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-orange-600 transition shadow-sm text-sm font-medium">Manage
+                        Enrollment →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Premium Footer with Counter & Actions -->
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 p-1 sm:p-1 sticky bottom-0 z-10 backdrop-blur-sm bg-white/95">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+                <div class="flex flex-wrap items-center gap-6 bg-gray-50/60 rounded-xl px-5 py-2.5">
+                    <span class="flex items-center gap-2.5 text-sm font-medium text-gray-700">
+                        <span class="w-2.5 h-2.5 rounded-full bg-green-500 ring-2 ring-green-200"></span>
+                        Present: <span id="cnt-present" class="font-bold text-gray-900 text-base ml-1">0</span>
+                    </span>
+                    <span class="flex items-center gap-2.5 text-sm font-medium text-gray-700">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-red-200"></span>
+                        Absent: <span id="cnt-absent" class="font-bold text-gray-900 text-base ml-1">0</span>
+                    </span>
+                    <span class="flex items-center gap-2.5 text-sm font-medium text-gray-700">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 ring-2 ring-amber-200"></span>
+                        Late: <span id="cnt-late" class="font-bold text-gray-900 text-base ml-1">0</span>
+                    </span>
+                    <span class="flex items-center gap-2.5 text-sm font-medium text-gray-700">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-400 ring-2 ring-blue-200"></span>
+                        Leave: <span id="cnt-leave" class="font-bold text-gray-900 text-base ml-1">0</span>
+                    </span>
+                </div>
+                <div class="flex gap-3 w-full md:w-auto">
+                    <a href="{% url 'batch_detail' batch.id %}"
+                        class="flex-1 md:flex-none justify-center text-center px-6 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 font-semibold text-sm transition-all duration-200 shadow-sm hover:shadow">Cancel</a>
+                    <button type="submit"
+                        class="flex-1 md:flex-none px-8 py-2.5 bg-gradient-to-r from-primary to-orange-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg text-sm flex items-center justify-center gap-2 group">
+                        <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
+                            </path>
+                        </svg>
+                        Save Attendance
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Function to update status card styling on mobile
+    function updateStatusCard(radio) {
+        // Update the styling of all labels in this card
+        const card = radio.closest('.att-row-mobile');
+        if (card) {
+            const labels = card.querySelectorAll('label');
+            labels.forEach(label => {
+                const input = label.querySelector('input[type="radio"]');
+                if (input && input.checked) {
+                    // Style the selected label
+                    if (input.value === 'present') {
+                        label.classList.remove('border-gray-200', 'bg-white', 'hover:border-green-300');
+                        label.classList.add('border-green-500', 'bg-green-50');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.add('text-green-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.add('text-green-700');
+                    } else if (input.value === 'absent') {
+                        label.classList.remove('border-gray-200', 'bg-white', 'hover:border-red-300');
+                        label.classList.add('border-red-500', 'bg-red-50');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.add('text-red-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.add('text-red-700');
+                    } else if (input.value === 'late') {
+                        label.classList.remove('border-gray-200', 'bg-white', 'hover:border-amber-300');
+                        label.classList.add('border-amber-400', 'bg-amber-50');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.add('text-amber-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.add('text-amber-700');
+                    } else if (input.value === 'leave') {
+                        label.classList.remove('border-gray-200', 'bg-white', 'hover:border-blue-300');
+                        label.classList.add('border-blue-400', 'bg-blue-50');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.add('text-blue-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.add('text-blue-700');
+                    }
+                } else if (input) {
+                    // Reset unselected labels
+                    if (input.value === 'present') {
+                        label.classList.remove('border-green-500', 'bg-green-50');
+                        label.classList.add('border-gray-200', 'bg-white', 'hover:border-green-300');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.remove('text-green-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.remove('text-green-700');
+                    } else if (input.value === 'absent') {
+                        label.classList.remove('border-red-500', 'bg-red-50');
+                        label.classList.add('border-gray-200', 'bg-white', 'hover:border-red-300');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.remove('text-red-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.remove('text-red-700');
+                    } else if (input.value === 'late') {
+                        label.classList.remove('border-amber-400', 'bg-amber-50');
+                        label.classList.add('border-gray-200', 'bg-white', 'hover:border-amber-300');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.remove('text-amber-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.remove('text-amber-700');
+                    } else if (input.value === 'leave') {
+                        label.classList.remove('border-blue-400', 'bg-blue-50');
+                        label.classList.add('border-gray-200', 'bg-white', 'hover:border-blue-300');
+                        const svg = label.querySelector('svg');
+                        if (svg) svg.classList.remove('text-blue-600');
+                        const span = label.querySelector('span:last-child');
+                        if (span) span.classList.remove('text-blue-700');
+                    }
+                    // Ensure text-gray classes are applied
+                    const span = label.querySelector('span:last-child');
+                    if (span && !span.classList.contains('text-gray-600')) {
+                        span.classList.add('text-gray-600');
+                    }
+                }
+            });
+        }
+        updateCounts();
+    }
+
+    function markAll(status) {
+        // For desktop radios
+        document.querySelectorAll('.status-radio').forEach(radio => {
+            if (radio.value === status) {
+                radio.checked = true;
+                const label = radio.closest('label');
+                if (label) {
+                    label.style.transform = 'scale(1.05)';
+                    setTimeout(() => { if (label) label.style.transform = ''; }, 200);
+                }
+            }
+        });
+
+        // For mobile radios
+        document.querySelectorAll('.status-radio-mobile').forEach(radio => {
+            if (radio.value === status) {
+                radio.checked = true;
+                updateStatusCard(radio);
+            }
+        });
+
+        updateCounts();
+    }
+
+    function updateCounts() {
+        const counts = { present: 0, absent: 0, late: 0, leave: 0 };
+
+        // Count from desktop radios
+        document.querySelectorAll('.status-radio:checked').forEach(radio => {
+            if (counts.hasOwnProperty(radio.value)) {
+                counts[radio.value] += 1;
+            }
+        });
+
+        // Count from mobile radios (if no desktop radios found)
+        if (document.querySelectorAll('.status-radio:checked').length === 0) {
+            document.querySelectorAll('.status-radio-mobile:checked').forEach(radio => {
+                if (counts.hasOwnProperty(radio.value)) {
+                    counts[radio.value] += 1;
+                }
+            });
+        }
+
+        document.getElementById('cnt-present').textContent = counts.present;
+        document.getElementById('cnt-absent').textContent = counts.absent;
+        document.getElementById('cnt-late').textContent = counts.late;
+        document.getElementById('cnt-leave').textContent = counts.leave;
+    }
+
+    // Initialize and attach events for desktop
+    document.querySelectorAll('.status-radio').forEach(radio => {
+        radio.addEventListener('change', () => updateCounts());
+        radio.addEventListener('focus', () => {
+            radio.closest('label')?.classList.add('ring-2', 'ring-primary/30');
+        });
+        radio.addEventListener('blur', () => {
+            radio.closest('label')?.classList.remove('ring-2', 'ring-primary/30');
+        });
+    });
+
+    // Initialize for mobile
+    document.querySelectorAll('.status-radio-mobile').forEach(radio => {
+        radio.addEventListener('change', () => updateCounts());
+    });
+
+    // Run on load
+    updateCounts();
+
+    // Auto-save indicator
+    let autoSaveTimeout;
+    document.querySelectorAll('input, select, textarea').forEach(field => {
+        field.addEventListener('change', () => {
+            if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                console.log('Changes detected — ready to save');
+            }, 1000);
+        });
+    });
+</script>
+{% endblock %}

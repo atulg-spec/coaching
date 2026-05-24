@@ -1,0 +1,43 @@
+{% extends 'base_public.html' %}
+{% block title %}Contact Us - Success Coaching{% endblock %}
+{% block content %}
+<section class="py-20 bg-light">
+    <div class="max-w-4xl mx-auto px-4">
+        <h1 class="text-4xl font-heading text-dark text-center mb-10">Contact Us</h1>
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-orange-100">
+            <form method="POST" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Full Name</label>
+                        <input type="text" name="name" required class="w-full border p-3 rounded focus:ring focus:ring-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Phone</label>
+                        <input type="text" name="phone" required class="w-full border p-3 rounded focus:ring focus:ring-primary">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email (Optional)</label>
+                        <input type="email" name="email" class="w-full border p-3 rounded focus:ring focus:ring-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Interested Class</label>
+                        <select name="interested_class" class="w-full border p-3 rounded focus:ring focus:ring-primary">
+                            <option value="5-8">Class 5-8 Foundation</option>
+                            <option value="9-10">Class 9-10 Boards</option>
+                            <option value="11-12">Class 11-12</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2">Message</label>
+                    <textarea name="message" rows="4" class="w-full border p-3 rounded focus:ring focus:ring-primary"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-full hover:bg-orange-600 transition">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

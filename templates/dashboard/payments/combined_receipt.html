@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt #{{ receipt_number }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Yatra+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --saffron: #E8620A;
+            --saffron-light: #FEF3EC;
+            --saffron-mid: #F97316;
+            --ink: #1C1917;
+            --muted: #78716C;
+            --border: #E7E5E4;
+            --paper: #FFFCF9;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: #F5F0EB;
+            font-family: 'Hind', sans-serif;
+            margin: 0;
+            padding: 1.5rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .receipt-wrapper {
+            width: 100%;
+            max-width: 680px;
+        }
+
+        .no-print {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 0.75rem;
+        }
+
+        .print-btn {
+            background: var(--saffron);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-family: 'Hind', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .print-btn:hover { background: #C4520A; }
+        .print-btn svg { width: 15px; height: 15px; }
+
+        .receipt {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        /* Orange top bar */
+        .receipt-topbar {
+            height: 6px;
+            background: linear-gradient(90deg, var(--saffron) 0%, #F97316 50%, #FBBF24 100%);
+        }
+
+        .receipt-body { padding: 2rem 2.5rem; }
+
+        /* Header */
+        .receipt-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1.5px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .brand-block { flex: 1; }
+
+        .brand-name {
+            font-family: 'Yatra One', cursive;
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            color: var(--saffron);
+            margin: 0 0 0.25rem;
+            line-height: 1.1;
+        }
+
+        .brand-tagline {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-contact {
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .receipt-badge {
+            flex-shrink: 0;
+            background: var(--saffron-light);
+            border: 1px solid #FCD9BE;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            text-align: center;
+        }
+
+        .receipt-badge .badge-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--saffron);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .receipt-badge .badge-number {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        /* Meta row */
+        .meta-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-cell {
+            background: #FAFAF9;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.6rem 0.85rem;
+        }
+
+        .meta-cell .cell-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 0.15rem;
+        }
+
+        .meta-cell .cell-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        /* Student card */
+        .student-card {
+            background: var(--saffron-light);
+            border: 1px solid #FCD9BE;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-card-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--saffron);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1rem;
+        }
+
+        .student-field { min-width: 0; }
+
+        .student-field .field-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #A16207;
+            display: block;
+            margin-bottom: 0.05rem;
+        }
+
+        .student-field .field-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Fee table */
+        .fee-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            font-size: 0.875rem;
+        }
+
+        .fee-table thead tr {
+            background: #F5F0EB;
+        }
+
+        .fee-table th {
+            padding: 0.65rem 1rem;
+            text-align: left;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .fee-table th:last-child { text-align: right; }
+
+        .fee-table td {
+            padding: 0.9rem 1rem;
+            color: var(--ink);
+            font-weight: 500;
+        }
+
+        .fee-table td:last-child {
+            text-align: right;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .fee-table tfoot tr {
+            background: var(--ink);
+        }
+
+        .fee-table tfoot td {
+            padding: 0.8rem 1rem;
+            color: white;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .fee-table tfoot td:last-child {
+            font-size: 1.1rem;
+            color: #FBBF24;
+        }
+
+        /* Footer */
+        .receipt-footer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-top: 1.25rem;
+            border-top: 1.5px dashed var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .payment-mode-block .pm-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .pm-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #ECFDF5;
+            border: 1px solid #6EE7B7;
+            color: #065F46;
+            border-radius: 20px;
+            padding: 0.3rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .signature-block {
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sig-line {
+            width: 140px;
+            border-bottom: 1.5px solid var(--ink);
+            margin: 0 auto 0.4rem;
+        }
+
+        .sig-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .receipt-stamp {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stamp-text {
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* ─── PRINT ─── */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .no-print { display: none !important; }
+
+            .receipt {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 520px) {
+            body { padding: 0.75rem 0.5rem; }
+
+            .receipt-body { padding: 1.25rem 1rem; }
+
+            .receipt-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .receipt-badge {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.6rem 0.85rem;
+            }
+
+            .meta-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+
+            .student-grid {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+
+            .receipt-footer {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.25rem;
+            }
+
+            .signature-block {
+                align-self: flex-end;
+            }
+
+            .fee-table th,
+            .fee-table td {
+                padding: 0.7rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .meta-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="receipt-wrapper">
+
+    <div class="no-print">
+        <button onclick="window.print()" class="print-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            Print Receipt
+        </button>
+    </div>
+
+    <div class="receipt">
+        <div class="receipt-topbar"></div>
+
+        <div class="receipt-body">
+
+            <!-- Header -->
+            <div class="receipt-header">
+                <div class="brand-block">
+                    <h1 class="brand-name">Success Coaching Classes</h1>
+                    <p class="brand-tagline">Excellence in Education</p>
+                    <div class="brand-contact">
+                        123 Education Lane, Lucknow, UP 226001<br>
+                        +91 98765 43210 &nbsp;·&nbsp; info@successcoaching.com
+                    </div>
+                </div>
+                <div class="receipt-badge">
+                    <span class="badge-label">Receipt No.</span>
+                    <span class="badge-number">{{ receipt_number|default:"N/A" }}</span>
+                </div>
+            </div>
+
+            <!-- Meta -->
+            <div class="meta-row">
+                <div class="meta-cell">
+                    <span class="cell-label">Date</span>
+                    <span class="cell-value">{{ first_tx.payment_date|date:"d M Y"|default:"N/A" }}</span>
+                </div>
+                <div class="meta-cell">
+                    <span class="cell-label">Fee Month(s)</span>
+                    <span class="cell-value">{{ fee_months }}</span>
+                </div>
+            </div>
+
+            <!-- Student Details -->
+            <div class="student-card">
+                <div class="student-card-title">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Student Details
+                </div>
+                <div class="student-grid">
+                    <div class="student-field">
+                        <span class="field-label">Name</span>
+                        <span class="field-value">{{ first_tx.payment.student.user.get_full_name }}</span>
+                    </div>
+                    <div class="student-field">
+                        <span class="field-label">Student ID</span>
+                        <span class="field-value">{{ first_tx.payment.student.student_id }}</span>
+                    </div>
+                    <div class="student-field">
+                        <span class="field-label">Class / Board</span>
+                        <span class="field-value">{{ first_tx.payment.student.current_class }} — {{ first_tx.payment.student.board }}</span>
+                    </div>
+                    <div class="student-field">
+                        <span class="field-label">Batches</span>
+                        <span class="field-value">
+                            {% for batch in first_tx.payment.student.batches.all %}
+                                {{ batch.batch_name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fee Table -->
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr>
+                        <td>Tuition Fee — {{ tx.payment.batch.batch_name }} ({{ tx.payment.month|date:"F Y" }})</td>
+                        <td>{{ tx.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total Paid</td>
+                        <td>₹ {{ total_amount }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <!-- Footer -->
+            <div class="receipt-footer">
+                <div class="payment-mode-block">
+                    <div class="pm-label">Payment Mode</div>
+                    <span class="pm-chip">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        {{ first_tx.payment_mode|default:"Cash"|upper }}
+                    </span>
+                </div>
+
+                <div class="signature-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-label">Authorized Signatory</div>
+                </div>
+            </div>
+
+            <!-- Stamp -->
+            <div class="receipt-stamp">
+                <p class="stamp-text">This is a computer-generated receipt and does not require a physical signature.</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
