@@ -93,7 +93,7 @@
                                     {{ tx.payment.student.user.first_name|first|upper }}
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-gray-800">{{ tx.payment.student.user.get_full_name }}</p>
+                                    <p class="font-semibold text-gray-800">{{ tx.payment.student.user.get_full_name }} (@{{ tx.payment.student.user.username }})</p>
                                     <p class="text-xs text-gray-400 font-mono">{{ tx.payment.student.student_id }}</p>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                         <td class="px-6 py-4 text-center">
                             {% if tx.receipt_number %}
                             <a href="{% url 'receipt' tx.pk %}" 
-                               class="inline-flex items-center gap-1.5 px-3 py-1.5 text-primary hover:text-orange-600 font-semibold text-xs rounded-lg hover:bg-orange-50 transition-all duration-200"
+                               class="inline-flex items-center gap-1.5 px-3 py-1.5 text-primary hover:text-secondary font-semibold text-xs rounded-lg hover:bg-orange-50 transition-all duration-200"
                                target="_blank">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -169,7 +169,7 @@
                                 <p class="text-gray-500 font-medium text-lg">No payment history found</p>
                                 <p class="text-gray-400 text-sm mt-1">No transactions match your search criteria</p>
                                 <a href="{% url 'payment_history' %}" 
-                                   class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-orange-600 transition shadow-sm text-sm font-medium">
+                                   class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition shadow-sm text-sm font-medium">
                                     Clear Filters
                                 </a>
                             </div>
@@ -193,7 +193,7 @@
                             {{ tx.payment.student.user.first_name|first|upper }}
                         </div>
                         <div>
-                            <p class="font-semibold text-gray-800 text-base">{{ tx.payment.student.user.get_full_name }}</p>
+                            <p class="font-semibold text-gray-800 text-base">{{ tx.payment.student.user.get_full_name }} (@{{ tx.payment.student.user.username }})</p>
                             <p class="text-xs text-gray-400 font-mono mt-0.5">{{ tx.payment.student.student_id }}</p>
                         </div>
                     </div>
@@ -253,7 +253,7 @@
                 <div class="flex items-center justify-between pt-2 border-t border-gray-100">
                     <span class="text-xs text-gray-500">Receipt:</span>
                     <a href="{% url 'receipt' tx.pk %}" 
-                       class="inline-flex items-center gap-1 text-primary hover:text-orange-600 font-semibold text-xs transition-colors"
+                       class="inline-flex items-center gap-1 text-primary hover:text-secondary font-semibold text-xs transition-colors"
                        target="_blank">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -271,7 +271,7 @@
                 <p class="text-gray-500 font-medium text-lg">No payment history found</p>
                 <p class="text-gray-400 text-sm mt-1">No transactions match your search criteria</p>
                 <a href="{% url 'payment_history' %}" 
-                   class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-orange-600 transition shadow-sm text-sm font-medium">
+                   class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition shadow-sm text-sm font-medium">
                     Clear Filters
                 </a>
             </div>

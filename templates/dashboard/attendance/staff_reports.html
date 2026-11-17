@@ -10,7 +10,7 @@
             <p class="text-sm text-gray-500">View daily attendance records for your staff.</p>
         </div>
         <a href="{% url 'mark_staff_attendance' %}"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-orange-500 text-white rounded-xl hover:from-orange-600 hover:to-orange-600 transition shadow-md text-sm font-bold">
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-[#102A43] text-white rounded-xl transition shadow-md text-sm font-bold">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             Mark Attendance
         </a>
@@ -25,7 +25,7 @@
                     <option value="">All Staff</option>
                     {% for s in staff_members %}
                     <option value="{{ s.id }}" {% if selected_staff_id == s.id|stringformat:"s" %}selected{% endif %}>
-                        {{ s.user.get_full_name }}
+                        {{ s.user.get_full_name }} (@{{ s.user.username }})
                     </option>
                     {% endfor %}
                 </select>
@@ -59,7 +59,7 @@
                     {% for record in recent_records %}
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-6 py-4 whitespace-nowrap">{{ record.date|date:"d M Y" }}</td>
-                        <td class="px-6 py-4 font-medium text-gray-800">{{ record.staff.user.get_full_name }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-800">{{ record.staff.user.get_full_name }} (@{{ record.staff.user.username }})</td>
                         <td class="px-6 py-4">
                             {% if record.status == 'present' %}
                                 <span class="px-2.5 py-1 bg-green-50 text-green-700 rounded-lg text-xs font-semibold border border-green-200">Present</span>

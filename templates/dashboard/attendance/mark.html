@@ -16,16 +16,16 @@
     <!-- Premium Batch Info Banner -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
         <div class="relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-orange-50/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-teal-50/40 to-transparent"></div>
             <div class="relative p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
                 <div class="flex items-start gap-4">
                     <div
-                        class="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                        class="w-14 h-14 bg-gradient-to-br from-teal-50 to-teal-100 border border-teal-200 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
                         📋
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-gray-800 tracking-tight">{{ batch.batch_name }}</h2>
-                        <div class="flex flex-wrap items-center gap-2 mt-1.5 text-sm text-gray-500">
+                        <h2 class="text-xl font-bold text-dark tracking-tight">{{ batch.batch_name }}</h2>
+                        <div class="flex flex-wrap items-center gap-2 mt-1.5 text-sm text-muted">
                             <span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -43,14 +43,14 @@
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
                     <div
-                        class="bg-blue-50/80 backdrop-blur-sm rounded-xl px-5 py-2.5 text-center border border-blue-100/50 shadow-sm">
-                        <p class="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">Date</p>
-                        <p class="font-bold text-gray-700 text-base">{{ today|date:"d M Y" }}</p>
+                        class="bg-slate-50/80 backdrop-blur-sm rounded-xl px-5 py-2.5 text-center border border-border shadow-sm">
+                        <p class="text-[11px] font-semibold text-muted uppercase tracking-wider">Date</p>
+                        <p class="font-bold text-dark text-base">{{ today|date:"d M Y" }}</p>
                     </div>
                     <div
-                        class="bg-orange-50/80 backdrop-blur-sm rounded-xl px-5 py-2.5 text-center border border-orange-100/50 shadow-sm">
-                        <p class="text-[11px] font-semibold text-orange-600 uppercase tracking-wider">Enrolled</p>
-                        <p class="font-bold text-gray-800 text-base">{{ student_data|length }}</p>
+                        class="bg-teal-50/80 backdrop-blur-sm rounded-xl px-5 py-2.5 text-center border border-teal-100 shadow-sm">
+                        <p class="text-[11px] font-semibold text-secondary uppercase tracking-wider">Enrolled</p>
+                        <p class="font-bold text-dark text-base">{{ student_data|length }}</p>
                     </div>
                 </div>
             </div>
@@ -136,11 +136,11 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div
-                                        class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-orange-700 text-sm font-bold shadow-sm">
+                                        class="w-9 h-9 rounded-xl bg-teal-50 text-secondary border border-teal-100 flex items-center justify-center text-sm font-bold shadow-sm">
                                         {{ item.student.user.first_name|first|upper }}
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-gray-800">{{ item.student.user.get_full_name }}</p>
+                                        <p class="font-semibold text-gray-800">{{ item.student.user.get_full_name }} (@{{ item.student.user.username }})</p>
                                         <p class="text-xs text-gray-400 font-mono mt-0.5">{{ item.student.student_id }}
                                         </p>
                                     </div>
@@ -228,7 +228,7 @@
                                     <p class="text-gray-400 text-sm mt-1">Add students to this batch to mark attendance
                                     </p>
                                     <a href="{% url 'batch_detail' batch.id %}"
-                                        class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-orange-600 transition shadow-sm text-sm font-medium">Manage
+                                        class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-[#102A43] transition shadow-sm text-sm font-medium">Manage
                                         Enrollment →</a>
                                 </div>
                             </td>
@@ -248,11 +248,11 @@
                 <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-transparent">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-orange-700 text-base font-bold shadow-sm">
+                            class="w-12 h-12 rounded-xl bg-teal-50 text-secondary border border-teal-100 flex items-center justify-center text-base font-bold shadow-sm">
                             {{ item.student.user.first_name|first|upper }}
                         </div>
                         <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-base">{{ item.student.user.get_full_name }}</p>
+                            <p class="font-semibold text-gray-800 text-base">{{ item.student.user.get_full_name }} (@{{ item.student.user.username }})</p>
                             <p class="text-xs text-gray-400 font-mono mt-0.5">{{ item.student.student_id }}</p>
                         </div>
                         <div class="text-xs text-gray-400">#{{ forloop.counter }}</div>
@@ -268,7 +268,7 @@
                         <label
                             class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
                                     {% if not item.record or item.record.status == 'present' %}border-green-500 bg-green-50{% else %}border-gray-200 bg-white hover:border-green-300{% endif %}">
-                            <input type="radio" name="status_{{ sid }}" value="present"
+                            <input type="radio" name="status_m_{{ sid }}" value="present"
                                 class="sr-only status-radio-mobile" {% if not item.record or item.record.status == 'present' %}checked{% endif %} onchange="updateStatusCard(this)">
                             <svg class="w-6 h-6 {% if not item.record or item.record.status == 'present' %}text-green-600{% else %}text-gray-400{% endif %}"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,7 +283,7 @@
                         <label
                             class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
                                     {% if item.record and item.record.status == 'absent' %}border-red-500 bg-red-50{% else %}border-gray-200 bg-white hover:border-red-300{% endif %}">
-                            <input type="radio" name="status_{{ sid }}" value="absent"
+                            <input type="radio" name="status_m_{{ sid }}" value="absent"
                                 class="sr-only status-radio-mobile" {% if item.record and item.record.status == 'absent' %}checked{% endif %} onchange="updateStatusCard(this)">
                             <svg class="w-6 h-6 {% if item.record and item.record.status == 'absent' %}text-red-600{% else %}text-gray-400{% endif %}"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,7 +298,7 @@
                         <label
                             class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
                                     {% if item.record and item.record.status == 'late' %}border-amber-400 bg-amber-50{% else %}border-gray-200 bg-white hover:border-amber-300{% endif %}">
-                            <input type="radio" name="status_{{ sid }}" value="late" class="sr-only status-radio-mobile"
+                            <input type="radio" name="status_m_{{ sid }}" value="late" class="sr-only status-radio-mobile"
                                 {% if item.record and item.record.status == 'late' %}checked{% endif %}
                                 onchange="updateStatusCard(this)">
                             <svg class="w-6 h-6 {% if item.record and item.record.status == 'late' %}text-amber-600{% else %}text-gray-400{% endif %}"
@@ -314,7 +314,7 @@
                         <label
                             class="relative flex flex-col items-center gap-2 p-1 rounded-xl border-2 transition-all duration-200 cursor-pointer
                                     {% if item.record and item.record.status == 'leave' %}border-blue-400 bg-blue-50{% else %}border-gray-200 bg-white hover:border-blue-300{% endif %}">
-                            <input type="radio" name="status_{{ sid }}" value="leave"
+                            <input type="radio" name="status_m_{{ sid }}" value="leave"
                                 class="sr-only status-radio-mobile" {% if item.record and item.record.status == 'leave' %}checked{% endif %} onchange="updateStatusCard(this)">
                             <svg class="w-6 h-6 {% if item.record and item.record.status == 'leave' %}text-blue-600{% else %}text-gray-400{% endif %}"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -346,7 +346,7 @@
                     <p class="text-gray-500 font-medium text-lg">No active students enrolled</p>
                     <p class="text-gray-400 text-sm mt-1">Add students to this batch to mark attendance</p>
                     <a href="{% url 'batch_detail' batch.id %}"
-                        class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-orange-600 transition shadow-sm text-sm font-medium">Manage
+                        class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl hover:bg-[#102A43] transition shadow-sm text-sm font-medium">Manage
                         Enrollment →</a>
                 </div>
             </div>
@@ -371,7 +371,7 @@
                         Late: <span id="cnt-late" class="font-bold text-gray-900 text-base ml-1">0</span>
                     </span>
                     <span class="flex items-center gap-2.5 text-sm font-medium text-gray-700">
-                        <span class="w-2.5 h-2.5 rounded-full bg-blue-400 ring-2 ring-blue-200"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-teal-400 ring-2 ring-teal-200"></span>
                         Leave: <span id="cnt-leave" class="font-bold text-gray-900 text-base ml-1">0</span>
                     </span>
                 </div>
@@ -379,7 +379,7 @@
                     <a href="{% url 'batch_detail' batch.id %}"
                         class="flex-1 md:flex-none justify-center text-center px-6 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 font-semibold text-sm transition-all duration-200 shadow-sm hover:shadow">Cancel</a>
                     <button type="submit"
-                        class="flex-1 md:flex-none px-8 py-2.5 bg-gradient-to-r from-primary to-orange-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg text-sm flex items-center justify-center gap-2 group">
+                        class="flex-1 md:flex-none px-8 py-2.5 bg-primary hover:bg-[#102A43] text-white rounded-xl font-bold transition-all duration-200 shadow-md hover:shadow-lg text-sm flex items-center justify-center gap-2 group">
                         <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -473,6 +473,23 @@
                 }
             });
         }
+        
+        // Sync with desktop radio
+        if (radio.name && radio.name.startsWith('status_m_')) {
+            const sid = radio.name.replace('status_m_', '');
+            const val = radio.value;
+            const desktopRadio = document.querySelector(`input.status-radio[name="status_${sid}"][value="${val}"]`);
+            if (desktopRadio) {
+                desktopRadio.checked = true;
+                // Add a small animation to the desktop label to show it updated
+                const dLabel = desktopRadio.closest('label');
+                if (dLabel) {
+                    dLabel.style.transform = 'scale(1.1)';
+                    setTimeout(() => { if (dLabel) dLabel.style.transform = ''; }, 200);
+                }
+            }
+        }
+        
         updateCounts();
     }
 

@@ -29,3 +29,9 @@ urlpatterns = [
     path('dashboard/payments/', include('payments.urls')),
     path('student-portal/', include('student_portal.urls')),
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

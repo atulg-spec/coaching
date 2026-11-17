@@ -1,0 +1,48 @@
+{% extends 'base_student.html' %}
+{% block title %}Study Materials - Success Coaching{% endblock %}
+{% block content %}
+
+<h2 class="text-xl font-bold text-dark mb-5 flex">
+    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+        </path>
+    </svg>
+    Study Materials
+</h2>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 py-6 px-2">
+    {% if materials %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for material in materials %}
+        <div class="border border-border rounded-xl p-4 flex items-start gap-4 hover:border-secondary/40 transition">
+            <div class="w-10 h-10 bg-teal-50 text-secondary border border-teal-100 rounded-lg flex items-center justify-center shrink-0">
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+  </svg>
+</div>
+            <div class="flex-1">
+                <h3 class="font-bold text-dark">{{ material.title }}</h3>
+                <p class="text-xs text-secondary font-semibold mb-1">{{ material.batch.batch_name }}</p>
+                {% if material.description %}<p class="text-xs text-muted mb-2">{{ material.description }}</p>{% endif %}
+                <p class="text-xs text-muted">Uploaded on {{ material.uploaded_at|date:"M d, Y" }}</p>
+            </div>
+            <a href="{{ material.file.url }}" target="_blank" class="bg-teal-50 text-secondary border border-teal-200 hover:bg-secondary hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                Download
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-10">
+        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
+</svg>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">No Materials Yet</h3>
+        <p class="text-gray-500 text-sm">Your teachers haven't uploaded any study materials for your batches.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+

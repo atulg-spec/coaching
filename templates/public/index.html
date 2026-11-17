@@ -1,65 +1,769 @@
 {% extends 'base_public.html' %}
-
 {% block content %}
-<section class="bg-gradient-to-br from-light to-orange-100 py-20 relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<!-- ═══════════════════════════════════════════════════
+     2. HERO SECTION
+═══════════════════════════════════════════════════ -->
+<section id="home" class="hero-bg dot-grid-light min-h-screen pt-32 pb-20 flex items-center">
+  <div class="hero-stripe"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+      <!-- Left: Text -->
+      <div>
+        <div class="inline-flex items-center gap-2 bg-white/[0.07] border border-white/15 text-white/90 rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6 backdrop-blur-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
+          Lucknow's #1 Coaching Institute
+        </div>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-[3.5rem] text-white leading-[1.08] font-black mb-5">
+          India's Most<br>
+          Trusted Coaching<br>
+          <span class="gradient-text">for Class 7–12</span>
+        </h1>
+        <p class="text-white/75 text-lg sm:text-xl font-medium mb-8 leading-relaxed max-w-xl">
+          Expert Faculty · Proven Results · From Foundation to JEE/NEET.<br>
+          <span class="text-white/55 text-base">CBSE · ICSE · UP State Board · JEE · NEET · CUET · NDA · Olympiads</span>
+        </p>
+        <div class="flex flex-wrap gap-4 mb-10">
+          <a href="#enrol" class="inline-flex items-center gap-2 bg-teal hover:bg-teal-dark text-white font-bold px-7 py-3.5 rounded-xl text-base shadow-lg shadow-teal/25 transition-all duration-300 hover:scale-[1.03]">
+            📅 Book Free Demo Class
+          </a>
+          <a href="#courses" class="inline-flex items-center gap-2 bg-white/[0.08] hover:bg-white/[0.15] border border-white/20 text-white font-semibold px-6 py-3.5 rounded-xl text-base backdrop-blur-sm transition-all duration-300">
+            📄 Download Brochure
+          </a>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="flex flex-wrap gap-3">
+          <div class="float-badge bg-white/[0.07] border border-white/15 text-white/85 rounded-xl px-4 py-2.5 text-sm font-semibold backdrop-blur-sm">
+            ★ 4.9 Rating
+          </div>
+          <div class="float-badge bg-white/[0.07] border border-white/15 text-white/85 rounded-xl px-4 py-2.5 text-sm font-semibold backdrop-blur-sm">
+            🎓 10,000+ Students
+          </div>
+          <div class="float-badge bg-white/[0.07] border border-white/15 text-white/85 rounded-xl px-4 py-2.5 text-sm font-semibold backdrop-blur-sm">
+            🏆 15+ Years
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Hero card -->
+      <div class="hidden lg:block">
+        <div class="relative">
+          <!-- Big decorative card -->
+          <div class="bg-white/[0.06] backdrop-blur-md border border-white/15 rounded-3xl p-8 text-white shadow-2xl">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gold flex items-center justify-center text-2xl shadow">🏆</div>
+              <div>
+                <p class="font-bold text-lg">2024–25 Results</p>
+                <p class="text-white/55 text-sm">Fresh out — our best year yet</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="bg-white/[0.07] rounded-2xl p-4 text-center">
+                <p class="text-3xl font-display font-bold text-gold">147</p>
+                <p class="text-xs text-white/55 mt-1">JEE Qualifiers</p>
+              </div>
+              <div class="bg-white/[0.07] rounded-2xl p-4 text-center">
+                <p class="text-3xl font-display font-bold text-teal-light">203</p>
+                <p class="text-xs text-white/55 mt-1">NEET Qualifiers</p>
+              </div>
+              <div class="bg-white/[0.07] rounded-2xl p-4 text-center">
+                <p class="text-3xl font-display font-bold text-success">98%</p>
+                <p class="text-xs text-white/55 mt-1">Board Pass Rate</p>
+              </div>
+              <div class="bg-white/[0.07] rounded-2xl p-4 text-center">
+                <p class="text-3xl font-display font-bold text-blue-300">312</p>
+                <p class="text-xs text-white/55 mt-1">CUET Selections</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-white/55">
+              <span class="text-success">●</span> New batches starting June 2025
+            </div>
+          </div>
+          <!-- Floating accent -->
+          <div class="absolute -top-4 -right-4 bg-gold text-primary font-display font-bold text-sm px-4 py-2 rounded-full shadow-lg rotate-6">
+            EMI Available!
+          </div>
+          <div class="absolute -bottom-4 -left-4 bg-teal text-white font-semibold text-xs px-4 py-2 rounded-full shadow-lg -rotate-3">
+            Scholarship up to 90%
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     3. STATS / SOCIAL PROOF BAR
+═══════════════════════════════════════════════════ -->
+<section id="stats" class="bg-primary dot-grid-light py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div class="reveal-init delay-1">
+        <p class="stat-num text-4xl sm:text-5xl font-bold text-white" data-target="10000" data-suffix="+">0</p>
+        <p class="text-white/50 text-sm mt-2 font-medium">Students Enrolled</p>
+      </div>
+      <div class="reveal-init delay-2">
+        <p class="stat-num text-4xl sm:text-5xl font-bold text-teal-light" data-target="95" data-suffix="%">0</p>
+        <p class="text-white/50 text-sm mt-2 font-medium">Boards Above 85%</p>
+      </div>
+      <div class="reveal-init delay-3">
+        <p class="stat-num text-4xl sm:text-5xl font-bold text-gold" data-target="500" data-suffix="+">0</p>
+        <p class="text-white/50 text-sm mt-2 font-medium">JEE/NEET Selections</p>
+      </div>
+      <div class="reveal-init delay-4">
+        <p class="stat-num text-4xl sm:text-5xl font-bold text-white" data-target="15" data-suffix="+">0</p>
+        <p class="text-white/50 text-sm mt-2 font-medium">Years of Excellence</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     4. COURSES / PROGRAMS
+═══════════════════════════════════════════════════ -->
+<section id="courses" class="py-20 bg-surface geo-bg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-primary font-bold mb-3">Programs & Courses</h2>
+      <p class="text-muted text-lg max-w-2xl mx-auto">Structured pathways from middle school to competitive success — every student, every stream.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Card 1 -->
+      <div class="course-card reveal-init delay-1 bg-surface border border-border rounded-2xl p-7 shadow-soft">
+        <div class="w-14 h-14 rounded-2xl bg-teal/10 flex items-center justify-center text-3xl mb-5">🌱</div>
+        <span class="text-xs font-bold uppercase tracking-widest text-teal mb-1 block">Class 7 – 8</span>
+        <h3 class="font-display text-xl font-bold text-primary mb-2">Foundation Program</h3>
+        <p class="text-muted text-sm leading-relaxed mb-4">Build rock-solid concepts in Maths & Science. Olympiad prep + NTSE groundwork. Small batches, personalised attention.</p>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="text-xs bg-teal/10 text-teal-dark rounded-full px-3 py-1">CBSE · ICSE</span>
+          <span class="text-xs bg-teal/10 text-teal-dark rounded-full px-3 py-1">Olympiads</span>
+          <span class="text-xs bg-teal/10 text-teal-dark rounded-full px-3 py-1">NTSE</span>
+        </div>
+        <a href="#enrol" class="text-teal text-sm font-bold hover:underline">Enquire Now →</a>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="course-card reveal-init delay-2 bg-surface border border-border rounded-2xl p-7 shadow-soft">
+        <div class="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center text-3xl mb-5">📐</div>
+        <span class="text-xs font-bold uppercase tracking-widest text-warning mb-1 block">Class 9 – 10</span>
+        <h3 class="font-display text-xl font-bold text-primary mb-2">Pre-Board Prep</h3>
+        <p class="text-muted text-sm leading-relaxed mb-4">Mastery in all subjects + board strategy sessions. Weekly mock tests, detailed performance analytics, parent reports.</p>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="text-xs bg-gold/10 text-warning rounded-full px-3 py-1">CBSE / ICSE</span>
+          <span class="text-xs bg-gold/10 text-warning rounded-full px-3 py-1">State Board</span>
+          <span class="text-xs bg-gold/10 text-warning rounded-full px-3 py-1">NTSE Class 10</span>
+        </div>
+        <a href="#enrol" class="text-teal text-sm font-bold hover:underline">Enquire Now →</a>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="course-card reveal-init delay-3 bg-gradient-to-br from-teal to-teal-dark text-white rounded-2xl p-7 shadow-lg relative overflow-hidden">
+        <div class="absolute top-3 right-3 bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 Most Popular</div>
+        <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl mb-5">⚗️</div>
+        <span class="text-xs font-bold uppercase tracking-widest text-white/75 mb-1 block">Class 11 – 12 · Science</span>
+        <h3 class="font-display text-xl font-bold mb-2">JEE + NEET Track</h3>
+        <p class="text-white/80 text-sm leading-relaxed mb-4">Integrated board + JEE Mains/Advanced + NEET UG preparation. Daily practice, All India test series, expert mentors.</p>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="text-xs bg-white/20 text-white rounded-full px-3 py-1">JEE Mains & Adv.</span>
+          <span class="text-xs bg-white/20 text-white rounded-full px-3 py-1">NEET UG</span>
+          <span class="text-xs bg-white/20 text-white rounded-full px-3 py-1">NDA</span>
+        </div>
+        <a href="#enrol" class="text-white text-sm font-bold hover:underline">Enquire Now →</a>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="course-card reveal-init delay-2 bg-surface border border-border rounded-2xl p-7 shadow-soft">
+        <div class="w-14 h-14 rounded-2xl bg-success/10 flex items-center justify-center text-3xl mb-5">📊</div>
+        <span class="text-xs font-bold uppercase tracking-widest text-success mb-1 block">Class 11 – 12 · Commerce</span>
+        <h3 class="font-display text-xl font-bold text-primary mb-2">CUET + CA Foundation</h3>
+        <p class="text-muted text-sm leading-relaxed mb-4">Commerce board mastery + CUET strategy + CA Foundation head start. Top DU/BHU admissions support.</p>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="text-xs bg-success/10 text-success rounded-full px-3 py-1">CUET</span>
+          <span class="text-xs bg-success/10 text-success rounded-full px-3 py-1">CA Foundation</span>
+          <span class="text-xs bg-success/10 text-success rounded-full px-3 py-1">Boards</span>
+        </div>
+        <a href="#enrol" class="text-teal text-sm font-bold hover:underline">Enquire Now →</a>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="course-card reveal-init delay-3 bg-surface border border-border rounded-2xl p-7 shadow-soft">
+        <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl mb-5">🎨</div>
+        <span class="text-xs font-bold uppercase tracking-widest text-primary mb-1 block">Class 11 – 12 · Arts</span>
+        <h3 class="font-display text-xl font-bold text-primary mb-2">Arts + CUET Humanities</h3>
+        <p class="text-muted text-sm leading-relaxed mb-4">History, Polity, Economics, Psychology — deep-dive learning with CUET humanities track. Perfect for IAS aspirants too.</p>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="text-xs bg-primary/10 text-primary rounded-full px-3 py-1">CUET Arts</span>
+          <span class="text-xs bg-primary/10 text-primary rounded-full px-3 py-1">Humanities</span>
+        </div>
+        <a href="#enrol" class="text-teal text-sm font-bold hover:underline">Enquire Now →</a>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="course-card reveal-init delay-4 bg-primary text-white rounded-2xl p-7 shadow-soft">
+        <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-3xl mb-5">⚡</div>
+        <span class="text-xs font-bold uppercase tracking-widest text-gold mb-1 block">All Classes</span>
+        <h3 class="font-display text-xl font-bold mb-2">Crash Course — Board Booster</h3>
+        <p class="text-white/65 text-sm leading-relaxed mb-4">60-day intensive before board exams. Targeted revision, PYQ sprint, full syllabus coverage with guaranteed score boost.</p>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="text-xs bg-white/10 text-white/90 rounded-full px-3 py-1">Feb – Mar Batches</span>
+          <span class="text-xs bg-white/10 text-white/90 rounded-full px-3 py-1">All Boards</span>
+        </div>
+        <a href="#enrol" class="text-gold text-sm font-bold hover:underline">Enquire Now →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     5. WHY CHOOSE US
+═══════════════════════════════════════════════════ -->
+<section id="why" class="py-20 bg-lightBg geo-bg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-primary font-bold mb-3">Why BrightMinds?</h2>
+      <p class="text-muted text-lg max-w-xl mx-auto">We don't just teach — we build toppers.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="reveal-init delay-1 bg-surface rounded-2xl p-7 shadow-soft border border-border">
+        <div class="text-4xl mb-4">👨‍🏫</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-2">Expert Faculty</h3>
+        <p class="text-muted text-sm leading-relaxed">IIT/AIIMS alumni with 8–20 years teaching experience. Subject specialists, not generalists.</p>
+      </div>
+      <div class="reveal-init delay-2 bg-surface rounded-2xl p-7 shadow-soft border border-border">
+        <div class="text-4xl mb-4">👥</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-2">Small Batches (Max 30)</h3>
+        <p class="text-muted text-sm leading-relaxed">Every student gets personal attention. No lost faces in a crowd. We know your child's name and weak chapters.</p>
+      </div>
+      <div class="reveal-init delay-3 bg-surface rounded-2xl p-7 shadow-soft border border-border">
+        <div class="text-4xl mb-4">🙋</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-2">Daily Doubt Sessions</h3>
+        <p class="text-muted text-sm leading-relaxed">Dedicated 1-hour doubt clearing every day. No confusion lingers past 24 hours. WhatsApp support too.</p>
+      </div>
+      <div class="reveal-init delay-2 bg-surface rounded-2xl p-7 shadow-soft border border-border">
+        <div class="text-4xl mb-4">💻</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-2">Online + Offline Modes</h3>
+        <p class="text-muted text-sm leading-relaxed">Flexible hybrid model. Attend live in class or stream from home — same quality, same teacher, same results.</p>
+      </div>
+      <div class="reveal-init delay-3 bg-surface rounded-2xl p-7 shadow-soft border border-border">
+        <div class="text-4xl mb-4">📝</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-2">Mock Tests Every Week</h3>
+        <p class="text-muted text-sm leading-relaxed">Full-length All India test series, chapter tests, speed drills. Detailed performance analytics after every test.</p>
+      </div>
+      <div class="reveal-init delay-4 bg-surface rounded-2xl p-7 shadow-soft border border-border">
+        <div class="text-4xl mb-4">📱</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-2">Parent App Updates</h3>
+        <p class="text-muted text-sm leading-relaxed">Real-time attendance, test scores, and progress reports. Parents stay in the loop — always.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     6. TOP RESULTS / STUDENT ACHIEVEMENTS
+═══════════════════════════════════════════════════ -->
+<section id="results" class="py-20 bg-primary dot-grid-light overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold mb-3">Our Students. Their Glory.</h2>
+      <p class="text-white/55 text-lg">Real results from real students. Every name a promise kept.</p>
+    </div>
+
+    <div class="results-track flex gap-5 overflow-x-auto pb-4 -mx-2 px-2">
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-teal mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">AR</div>
+        <p class="text-white font-bold text-base">Aarav Rajput</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">AIR 847</p>
+        <p class="text-white/55 text-xs">JEE Advanced 2024</p>
+        <p class="text-white/35 text-xs mt-1">Now: IIT Bombay</p>
+      </div>
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-success mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">PS</div>
+        <p class="text-white font-bold text-base">Priya Singh</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">580/720</p>
+        <p class="text-white/55 text-xs">NEET UG 2024</p>
+        <p class="text-white/35 text-xs mt-1">Now: KGMU Lucknow</p>
+      </div>
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-primary-light mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">RK</div>
+        <p class="text-white font-bold text-base">Rahul Kumar</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">99.2%ile</p>
+        <p class="text-white/55 text-xs">JEE Mains 2024</p>
+        <p class="text-white/35 text-xs mt-1">Now: NIT Allahabad</p>
+      </div>
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-danger mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">SM</div>
+        <p class="text-white font-bold text-base">Shreya Mishra</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">98.6%</p>
+        <p class="text-white/55 text-xs">CBSE Class 12 · 2024</p>
+        <p class="text-white/35 text-xs mt-1">Commerce Topper</p>
+      </div>
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-warning mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">VT</div>
+        <p class="text-white font-bold text-base">Vivaan Tiwari</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">AIR 2340</p>
+        <p class="text-white/55 text-xs">JEE Mains 2024</p>
+        <p class="text-white/35 text-xs mt-1">Now: MNNIT Allahabad</p>
+      </div>
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-teal-light mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">AT</div>
+        <p class="text-white font-bold text-base">Ananya Trivedi</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">560/720</p>
+        <p class="text-white/55 text-xs">NEET UG 2024</p>
+        <p class="text-white/35 text-xs mt-1">Now: BHU Medical</p>
+      </div>
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-gold-dark mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">KP</div>
+        <p class="text-white font-bold text-base">Kunal Pandey</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">97.4%</p>
+        <p class="text-white/55 text-xs">UP Board Class 12</p>
+        <p class="text-white/35 text-xs mt-1">State Merit List</p>
+      </div>
+
+      <div class="result-card bg-white/[0.07] border border-white/10 backdrop-blur-sm rounded-2xl p-6 min-w-[220px] text-center">
+        <div class="w-14 h-14 rounded-full bg-danger mx-auto flex items-center justify-center text-2xl font-display font-bold text-white mb-3">NS</div>
+        <p class="text-white font-bold text-base">Neha Sharma</p>
+        <p class="text-gold text-2xl font-display font-bold my-1">CUET 99%ile</p>
+        <p class="text-white/55 text-xs">CUET 2024 · Arts</p>
+        <p class="text-white/35 text-xs mt-1">Now: DU (Miranda)</p>
+      </div>
+
+    </div>
+    <p class="text-white/35 text-xs text-center mt-4">← Scroll to see more results →</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     7. FACULTY SECTION
+═══════════════════════════════════════════════════ -->
+<section id="faculty" class="py-20 bg-surface geo-bg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-primary font-bold mb-3">Meet Our Faculty</h2>
+      <p class="text-muted text-lg max-w-xl mx-auto">IITians, doctors, and seasoned educators who turn complex into simple.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <div class="reveal-init delay-1 faculty-card bg-surface rounded-2xl p-6 shadow-soft border border-border">
+        <div class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center font-display font-bold text-2xl mb-4">SK</div>
+        <h3 class="font-display font-bold text-lg text-primary">Dr. Suresh Kumar</h3>
+        <p class="text-teal text-xs font-bold uppercase tracking-wider mt-0.5 mb-2">Physics & JEE</p>
+        <p class="text-muted text-xs">IIT Delhi · M.Sc, Ph.D Physics · 18 yrs teaching · 400+ JEE selections</p>
+      </div>
+
+      <div class="reveal-init delay-2 faculty-card bg-surface rounded-2xl p-6 shadow-soft border border-border">
+        <div class="w-16 h-16 rounded-full bg-teal text-white flex items-center justify-center font-display font-bold text-2xl mb-4">NV</div>
+        <h3 class="font-display font-bold text-lg text-primary">Dr. Neha Verma</h3>
+        <p class="text-teal text-xs font-bold uppercase tracking-wider mt-0.5 mb-2">Biology & NEET</p>
+        <p class="text-muted text-xs">AIIMS Lucknow · MBBS, MD · 12 yrs teaching · NEET specialist since 2011</p>
+      </div>
+
+      <div class="reveal-init delay-3 faculty-card bg-surface rounded-2xl p-6 shadow-soft border border-border">
+        <div class="w-16 h-16 rounded-full bg-success text-white flex items-center justify-center font-display font-bold text-2xl mb-4">AT</div>
+        <h3 class="font-display font-bold text-lg text-primary">Amit Tripathi</h3>
+        <p class="text-teal text-xs font-bold uppercase tracking-wider mt-0.5 mb-2">Maths · Class 9–12</p>
+        <p class="text-muted text-xs">IIT Kanpur · B.Tech + M.Tech · 15 yrs · State Mathematics Olympiad mentor</p>
+      </div>
+
+      <div class="reveal-init delay-4 faculty-card bg-surface rounded-2xl p-6 shadow-soft border border-border">
+        <div class="w-16 h-16 rounded-full bg-primary-light text-white flex items-center justify-center font-display font-bold text-2xl mb-4">RG</div>
+        <h3 class="font-display font-bold text-lg text-primary">Rekha Gupta</h3>
+        <p class="text-teal text-xs font-bold uppercase tracking-wider mt-0.5 mb-2">Commerce & CUET</p>
+        <p class="text-muted text-xs">CA (ICAI) · MBA Finance · 10 yrs · CA Foundation expert, CUET Commerce topper coach</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     8. TESTIMONIALS CAROUSEL
+═══════════════════════════════════════════════════ -->
+<section id="testimonials" class="py-20 bg-lightBg">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-primary font-bold mb-3">What They Say</h2>
+      <p class="text-muted text-lg">Students and parents, in their own words.</p>
+    </div>
+
+    <div class="relative overflow-hidden rounded-2xl">
+      <!-- Track -->
+      <div id="testimonial-track" class="flex testimonial-track">
+
+        <div class="min-w-full bg-surface border border-border rounded-2xl p-8 sm:p-10 shadow-soft">
+          <div class="flex items-center gap-1 text-gold text-xl mb-4">★★★★★</div>
+          <p class="font-display italic text-xl sm:text-2xl text-primary leading-relaxed mb-6">"My son went from 68% in Class 9 to 97.2% in Class 10 boards. The faculty here don't just teach — they inspire. Best decision we ever made."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold">RS</div>
             <div>
-                <h1 class="text-5xl md:text-6xl text-dark leading-tight mb-4">
-                    Shape Your Future, <br> <span class="text-primary">One Chapter at a Time</span>
-                </h1>
-                <p class="font-heading text-xl text-secondary mb-6">सफलता की ओर पहला कदम</p>
-                <p class="text-lg text-gray-600 mb-8">Lucknow's trusted coaching for Class 5–12 | CBSE & ICSE</p>
-                <div class="flex space-x-4">
-                    <a href="{% url 'contact' %}" class="bg-gradient-to-r from-primary to-orange-500 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all">Enroll Now</a>
-                    <a href="{% url 'courses' %}" class="bg-white text-primary border-2 border-primary px-8 py-3 rounded-full font-bold hover:bg-orange-50 transition-all">View Batches</a>
-                </div>
+              <p class="font-bold text-primary">Ritu Srivastava</p>
+              <p class="text-muted text-sm">Parent of Aryan Srivastava, Class 10 · 2024</p>
             </div>
-            <div class="hidden md:block">
-                <div class="bg-white p-8 rounded-2xl shadow-xl transform rotate-3 relative border-2 border-orange-100">
-                    <svg class="w-full h-64 text-secondary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                </div>
-            </div>
+            <span class="ml-auto text-xs bg-primary/10 text-primary font-semibold px-3 py-1 rounded-full">Parent</span>
+          </div>
         </div>
+
+        <div class="min-w-full bg-surface border border-border rounded-2xl p-8 sm:p-10 shadow-soft">
+          <div class="flex items-center gap-1 text-gold text-xl mb-4">★★★★★</div>
+          <p class="font-display italic text-xl sm:text-2xl text-primary leading-relaxed mb-6">"I cracked JEE Advanced with AIR 847. The Physics faculty at BrightMinds is simply unmatched. The doubt sessions made all the difference in my last 3 months."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-teal text-white flex items-center justify-center font-bold">AR</div>
+            <div>
+              <p class="font-bold text-primary">Aarav Rajput</p>
+              <p class="text-muted text-sm">JEE Advanced 2024 · AIR 847 · Now at IIT Bombay</p>
+            </div>
+            <span class="ml-auto text-xs bg-teal/10 text-teal font-semibold px-3 py-1 rounded-full">Student</span>
+          </div>
+        </div>
+
+        <div class="min-w-full bg-surface border border-border rounded-2xl p-8 sm:p-10 shadow-soft">
+          <div class="flex items-center gap-1 text-gold text-xl mb-4">★★★★★</div>
+          <p class="font-display italic text-xl sm:text-2xl text-primary leading-relaxed mb-6">"As a working parent, the daily progress updates on the parent app gave me complete peace of mind. I always knew exactly where my daughter stood, every single day."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-success text-white flex items-center justify-center font-bold">MP</div>
+            <div>
+              <p class="font-bold text-primary">Manoj Pandey</p>
+              <p class="text-muted text-sm">Parent of Prachi Pandey, NEET 2024 Qualifier</p>
+            </div>
+            <span class="ml-auto text-xs bg-primary/10 text-primary font-semibold px-3 py-1 rounded-full">Parent</span>
+          </div>
+        </div>
+
+        <div class="min-w-full bg-surface border border-border rounded-2xl p-8 sm:p-10 shadow-soft">
+          <div class="flex items-center gap-1 text-gold text-xl mb-4">★★★★★</div>
+          <p class="font-display italic text-xl sm:text-2xl text-primary leading-relaxed mb-6">"I joined the Foundation batch in Class 7. By Class 10 I topped my school. BrightMinds builds concepts from scratch — they never let you just mug up answers."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-primary-light text-white flex items-center justify-center font-bold">DM</div>
+            <div>
+              <p class="font-bold text-primary">Dhruv Mishra</p>
+              <p class="text-muted text-sm">Class 10 · School Topper · Foundation Batch 2021</p>
+            </div>
+            <span class="ml-auto text-xs bg-teal/10 text-teal font-semibold px-3 py-1 rounded-full">Student</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center justify-center gap-4 mt-6">
+        <button id="prev-btn" class="w-10 h-10 rounded-full border-2 border-primary/15 hover:border-teal text-primary hover:text-teal flex items-center justify-center transition-colors duration-200" aria-label="Previous">
+          ←
+        </button>
+        <div id="testimonial-dots" class="flex gap-2"></div>
+        <button id="next-btn" class="w-10 h-10 rounded-full border-2 border-primary/15 hover:border-teal text-primary hover:text-teal flex items-center justify-center transition-colors duration-200" aria-label="Next">
+          →
+        </button>
+      </div>
     </div>
+  </div>
 </section>
 
-<section class="bg-dark text-white py-12 border-b-4 border-accent">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-gray-700">
-            <div><div class="font-accent text-4xl text-accent mb-2">500+</div><div class="text-sm uppercase text-gray-300">Total Students</div></div>
-            <div><div class="font-accent text-4xl text-accent mb-2">20+</div><div class="text-sm uppercase text-gray-300">Batches Running</div></div>
-            <div><div class="font-accent text-4xl text-accent mb-2">10+</div><div class="text-sm uppercase text-gray-300">Years of Excellence</div></div>
-            <div><div class="font-accent text-4xl text-accent mb-2">95%</div><div class="text-sm uppercase text-gray-300">Results Percentage</div></div>
-        </div>
+<!-- ═══════════════════════════════════════════════════
+     9. BATCH & FEE STRUCTURE
+═══════════════════════════════════════════════════ -->
+<section id="fees" class="py-20 bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-primary font-bold mb-3">Batch Schedule & Fees</h2>
+      <p class="text-muted text-lg max-w-xl mx-auto">Flexible timings. EMI available. Scholarships up to 90%.</p>
     </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Morning -->
+      <div class="reveal-init delay-1 border-2 border-border rounded-2xl p-6 hover:border-teal/30 transition-colors duration-300 bg-surface">
+        <div class="text-3xl mb-3">🌅</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-1">Morning Batch</h3>
+        <p class="text-teal text-sm font-semibold mb-3">6:00 AM – 9:00 AM</p>
+        <ul class="text-sm text-muted space-y-1 mb-5">
+          <li>✓ Class 9–12</li>
+          <li>✓ Mon – Sat</li>
+          <li>✓ Max 30 students</li>
+          <li>✓ Starts June 2025</li>
+        </ul>
+        <a href="#enrol" class="block text-center bg-lightBg hover:bg-teal hover:text-white text-primary text-sm font-semibold py-2.5 rounded-lg transition-colors duration-200">Contact for Fees</a>
+      </div>
+
+      <!-- Evening — Most Popular -->
+      <div class="reveal-init delay-2 border-2 border-teal rounded-2xl p-6 relative shadow-lg shadow-teal/10 bg-surface">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal text-white text-xs font-bold px-4 py-1 rounded-full shadow">★ Most Popular</div>
+        <div class="text-3xl mb-3">🌆</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-1">Evening Batch</h3>
+        <p class="text-teal text-sm font-semibold mb-3">4:30 PM – 7:30 PM</p>
+        <ul class="text-sm text-muted space-y-1 mb-5">
+          <li>✓ All Classes 7–12</li>
+          <li>✓ Mon – Sat</li>
+          <li>✓ Max 30 students</li>
+          <li>✓ Starts June & Nov</li>
+        </ul>
+        <a href="#enrol" class="block text-center bg-teal hover:bg-teal-dark text-white text-sm font-semibold py-2.5 rounded-lg transition-colors duration-200 shadow">Contact for Fees</a>
+      </div>
+
+      <!-- Weekend -->
+      <div class="reveal-init delay-3 border-2 border-border rounded-2xl p-6 hover:border-teal/30 transition-colors duration-300 bg-surface">
+        <div class="text-3xl mb-3">📅</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-1">Weekend Batch</h3>
+        <p class="text-teal text-sm font-semibold mb-3">Sat & Sun · 9 AM – 1 PM</p>
+        <ul class="text-sm text-muted space-y-1 mb-5">
+          <li>✓ Class 9–12</li>
+          <li>✓ School students</li>
+          <li>✓ Intensive coverage</li>
+          <li>✓ Starts June 2025</li>
+        </ul>
+        <a href="#enrol" class="block text-center bg-lightBg hover:bg-teal hover:text-white text-primary text-sm font-semibold py-2.5 rounded-lg transition-colors duration-200">Contact for Fees</a>
+      </div>
+
+      <!-- Online -->
+      <div class="reveal-init delay-4 border-2 border-border rounded-2xl p-6 hover:border-teal/30 transition-colors duration-300 bg-surface">
+        <div class="text-3xl mb-3">🖥️</div>
+        <h3 class="font-display font-bold text-xl text-primary mb-1">Online Batch</h3>
+        <p class="text-teal text-sm font-semibold mb-3">Flexible Timings</p>
+        <ul class="text-sm text-muted space-y-1 mb-5">
+          <li>✓ All Classes 7–12</li>
+          <li>✓ Pan-India</li>
+          <li>✓ Live + Recorded</li>
+          <li>✓ Enrol anytime</li>
+        </ul>
+        <a href="#enrol" class="block text-center bg-lightBg hover:bg-teal hover:text-white text-primary text-sm font-semibold py-2.5 rounded-lg transition-colors duration-200">Contact for Fees</a>
+      </div>
+
+    </div>
+
+    <!-- EMI note -->
+    <div class="mt-10 text-center">
+      <p class="inline-flex items-center gap-3 bg-gold/10 border border-gold/25 text-primary font-semibold text-sm px-6 py-3 rounded-full">
+        💳 Easy EMI Available &nbsp;·&nbsp; 🎓 Scholarship up to 90% via Admission Test &nbsp;·&nbsp; 📞 Call to discuss custom plans
+      </p>
+    </div>
+  </div>
 </section>
 
-<section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-4xl text-dark mb-12 inline-block relative border-b-4 border-primary pb-2">Why Choose Us</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
-                <div class="text-4xl mb-4">👨‍🏫</div>
-                <h3 class="text-xl font-bold text-dark mb-2">Expert Faculty</h3>
-                <p class="text-sm">Highly experienced teachers dedicated to student success.</p>
-            </div>
-            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
-                <div class="text-4xl mb-4">👥</div>
-                <h3 class="text-xl font-bold text-dark mb-2">Small Batch Size</h3>
-                <p class="text-sm">Personalized attention to ensure every concept is clear.</p>
-            </div>
-            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
-                <div class="text-4xl mb-4">📝</div>
-                <h3 class="text-xl font-bold text-dark mb-2">Regular Tests</h3>
-                <p class="text-sm">Weekly assessments to track progress continuously.</p>
-            </div>
-            <div class="p-6 rounded-2xl border border-orange-100 bg-light">
-                <div class="text-4xl mb-4">📱</div>
-                <h3 class="text-xl font-bold text-dark mb-2">Parent Updates</h3>
-                <p class="text-sm">Regular feedback on attendance and test scores.</p>
-            </div>
-        </div>
+<!-- ═══════════════════════════════════════════════════
+     10. ENROLMENT FORM
+═══════════════════════════════════════════════════ -->
+<section id="enrol" class="py-20 relative overflow-hidden" style="background: linear-gradient(135deg, #1A2E44 0%, #243B53 45%, #2A9D8F 120%);">
+  <div class="dot-grid-light absolute inset-0 opacity-30 pointer-events-none"></div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center mb-10">
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold mb-3">Book Your Free Demo Class</h2>
+      <p class="text-white/70 text-lg">Fill in the details below. We'll call you within 24 hours to schedule your session.</p>
     </div>
+
+    <!-- Form card -->
+    <div class="bg-surface rounded-3xl p-8 sm:p-10 shadow-2xl">
+
+      <!-- Success message (hidden by default) -->
+      <div id="form-success" class="hidden text-center py-8">
+        <div class="text-6xl mb-4">🎉</div>
+        <h3 class="font-display text-2xl font-bold text-primary mb-2">You're In!</h3>
+        <p class="text-muted">Our team will call you within 24 hours. Check your WhatsApp too!</p>
+      </div>
+
+      <div id="form-body">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-1.5" for="f-name">Student Name *</label>
+            <input id="f-name" type="text" placeholder="e.g. Arjun Sharma" class="form-input w-full border-2 border-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted transition-all">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-1.5" for="f-class">Current Class *</label>
+            <select id="f-class" class="form-input w-full border-2 border-border rounded-xl px-4 py-3 text-sm text-primary bg-surface transition-all">
+              <option value="">Select Class</option>
+              <option>Class 7</option>
+              <option>Class 8</option>
+              <option>Class 9</option>
+              <option>Class 10</option>
+              <option>Class 11</option>
+              <option>Class 12</option>
+              <option>Dropper / Repeater</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-1.5" for="f-stream">Stream (for 11–12) *</label>
+            <select id="f-stream" class="form-input w-full border-2 border-border rounded-xl px-4 py-3 text-sm text-primary bg-surface transition-all">
+              <option value="">Select Stream</option>
+              <option>Science (JEE)</option>
+              <option>Science (NEET)</option>
+              <option>Commerce</option>
+              <option>Arts / Humanities</option>
+              <option>Not applicable</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-1.5" for="f-phone">Phone Number (WhatsApp) *</label>
+            <input id="f-phone" type="tel" placeholder="10-digit mobile number" maxlength="10" class="form-input w-full border-2 border-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted transition-all">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-1.5" for="f-city">City *</label>
+            <input id="f-city" type="text" placeholder="e.g. Lucknow" class="form-input w-full border-2 border-border rounded-xl px-4 py-3 text-sm text-primary placeholder-muted transition-all">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-1.5">Preferred Mode *</label>
+            <div class="flex gap-4 mt-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="mode" value="Offline" class="accent-teal w-4 h-4"> <span class="text-sm font-medium text-primary">Offline</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="mode" value="Online" class="accent-teal w-4 h-4"> <span class="text-sm font-medium text-primary">Online</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="mode" value="Both" class="accent-teal w-4 h-4"> <span class="text-sm font-medium text-primary">Either</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error message -->
+        <div id="form-error" class="hidden bg-danger/10 border border-danger/30 text-danger text-sm rounded-xl px-4 py-3 mb-4"></div>
+
+        <button id="submit-btn" class="w-full bg-teal hover:bg-teal-dark text-white font-bold text-lg py-4 rounded-xl shadow-lg shadow-teal/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+          📅 Book My Free Demo Class
+        </button>
+
+        <p class="text-center text-muted text-xs mt-4">🔒 No spam · ✅ Free class, zero obligation · 📞 We call within 24 hours</p>
+      </div>
+    </div>
+  </div>
 </section>
+
+<!-- ═══════════════════════════════════════════════════
+     11. FAQ
+═══════════════════════════════════════════════════ -->
+<section id="faq" class="py-20 bg-lightBg">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl text-primary font-bold mb-3">Frequently Asked Questions</h2>
+      <p class="text-muted text-lg">Everything parents and students want to know.</p>
+    </div>
+
+    <div id="faq-container" class="space-y-3">
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>How do I get admitted to BrightMinds Academy?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">Admission is simple: fill our online form or visit our centre. You'll appear for a free Scholarship Admission Test (SAT) held every Sunday at 10 AM. Based on your score, you receive a fee scholarship between 10%–90%. No minimum score is required for regular admission — the test only determines scholarship eligibility.</div>
+        </div>
+      </div>
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>What is the fee structure and is EMI available?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">Fees vary by program, class, and mode (online/offline). We offer transparent pricing with no hidden charges. EMI options are available for all annual programs — you can pay monthly, quarterly, or annually. Please call or WhatsApp us for detailed fee cards, or fill the demo form and our counsellor will walk you through everything.</div>
+        </div>
+      </div>
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>How big are the batches?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">We strictly cap all batches at 30 students. This is non-negotiable for us — it's the reason our results are consistently top-class. Once a batch is full, a new one is opened. We never compromise batch size for revenue.</div>
+        </div>
+      </div>
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>Do you provide study material?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">Yes. All enrolled students receive BrightMinds' proprietary printed study modules, PYQ compilations, formula booklets, and monthly practice papers. Online students also get access to a digital library with 10,000+ solved questions, recorded lectures, and downloadable notes.</div>
+        </div>
+      </div>
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>Is online coaching as effective as offline?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">Our online students consistently match offline results — in 2024, 6 of our top 10 JEE qualifiers were online students. Live classes, daily doubt sessions on WhatsApp/Zoom, weekly tests, and recorded backups make the online experience equally rigorous. Students in other cities and states prefer this mode.</div>
+        </div>
+      </div>
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>How are doubts handled outside class hours?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">Every student gets access to a subject-specific WhatsApp group with their faculty. Doubts posted before 10 PM are answered the same night. Additionally, there's a 1-hour dedicated doubt session every weekday. No confusion lingers for more than 24 hours — guaranteed.</div>
+        </div>
+      </div>
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>When do new batches start?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">Main batches start in April–May (aligned with the new academic year) and again in October–November (mid-year intake). Crash Courses and Board Booster batches start in January–February for board exam students. Online batches can be joined at any time with recorded catch-up content.</div>
+        </div>
+      </div>
+
+      <div class="faq-item bg-surface rounded-2xl border border-border overflow-hidden shadow-soft">
+        <button class="faq-question w-full text-left flex items-center justify-between px-6 py-5 text-primary font-semibold text-base hover:text-teal transition-colors duration-200">
+          <span>Do you prepare for CBSE, ICSE, and State Boards?</span>
+          <span class="faq-icon text-2xl leading-none text-muted ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer px-6 text-sm text-muted leading-relaxed">
+          <div class="pb-5">Yes — we cover CBSE, ICSE, and UP State Board (Hindi & English medium) for all classes. Our curriculum is synced with each board's syllabus and exam pattern. Board-specific revision sessions, model papers, and previous year papers are part of every program.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     CONTACT STRIP
+═══════════════════════════════════════════════════ -->
+<section id="contact" class="py-16 bg-primary">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+      <div>
+        <p class="text-white/35 text-xs uppercase tracking-[0.15em] mb-2">Call / WhatsApp</p>
+        <a href="https://wa.me/917800000000" class="text-white font-bold text-xl hover:text-teal-light transition-colors duration-200">+91 78000 00000</a>
+        <p class="text-white/45 text-sm mt-1">Mon–Sat, 8 AM – 8 PM</p>
+      </div>
+      <div>
+        <p class="text-white/35 text-xs uppercase tracking-[0.15em] mb-2">Our Centre</p>
+        <p class="text-white font-semibold">12, Vibhav Khand, Gomti Nagar</p>
+        <p class="text-white/55 text-sm">Lucknow, Uttar Pradesh – 226010</p>
+      </div>
+      <div>
+        <p class="text-white/35 text-xs uppercase tracking-[0.15em] mb-2">Email</p>
+        <a href="mailto:info@brightmindsacademy.in" class="text-white font-semibold hover:text-teal-light transition-colors duration-200">info@brightmindsacademy.in</a>
+        <p class="text-white/45 text-sm mt-1">Reply within 24 hours</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

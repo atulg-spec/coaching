@@ -10,4 +10,5 @@ urlpatterns = [
     path('staff-salary/', views.pay_staff_salary, name='pay_staff_salary'),
     path('staff-salary/history/', views.staff_salary_history, name='staff_salary_history'),
     path('inquiries/', views.inquiry_list, name='inquiry_list'),
+    path('<int:pk>/mark-paid/', views.mark_as_paid, name='mark_as_paid'),
 ]

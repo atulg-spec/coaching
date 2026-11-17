@@ -235,3 +235,83 @@ def staff_attendance_reports(request):
         'selected_date': selected_date_str,
         'selected_staff_id': selected_staff_id,
     })
+
+import calendar
+
+@staff_or_admin_required
+def staff_my_attendance(request):
+    user = request.user
+    if user.role != 'staff':
+        messages.error(request, "Only staff can view this page.")
+        return redirect('dashboard_home')
+        
+    try:
+        staff = user.staff
+    except Exception:
+        messages.error(request, "Staff profile not found.")
+        return redirect('dashboard_home')
+        
+    today = timezone.now().date()
+    try:
+        year = int(request.GET.get('year', today.year))
+        month = int(request.GET.get('month', today.month))
+    except ValueError:
+        year = today.year
+        month = today.month
+        
+    if month < 1 or month > 12:
+        month = today.month
+        year = today.year
+    
+    # Calculate prev/next month
+    if month == 1:
+        prev_month, prev_year = 12, year - 1
+    else:
+        prev_month, prev_year = month - 1, year
+        
+    if month == 12:
+        next_month, next_year = 1, year + 1
+    else:
+        next_month, next_year = month + 1, year
+        
+    # Get attendance for the month
+    records = StaffAttendance.objects.filter(
+        staff=staff,
+        date__year=year,
+        date__month=month
+    )
+    attendance_dict = {record.date.day: record for record in records}
+    
+    # Generate calendar
+    cal = calendar.monthcalendar(year, month)
+    cal_with_records = []
+    for week in cal:
+        week_with_records = []
+        for day in week:
+            record = attendance_dict.get(day) if day != 0 else None
+            week_with_records.append({'day': day, 'record': record})
+        cal_with_records.append(week_with_records)
+    
+    # Stats
+    present = records.filter(status='present').count()
+    absent = records.filter(status='absent').count()
+    half_day = records.filter(status='half_day').count()
+    leave = records.filter(status='leave').count()
+    
+    context = {
+        'year': year,
+        'month': month,
+        'month_name': calendar.month_name[month],
+        'prev_month': prev_month,
+        'prev_year': prev_year,
+        'next_month': next_month,
+        'next_year': next_year,
+        'cal': cal_with_records,
+        'present_count': present,
+        'absent_count': absent,
+        'half_day_count': half_day,
+        'leave_count': leave,
+        'today': today,
+    }
+    
+    return render(request, 'dashboard/attendance/staff_my_attendance.html', context)

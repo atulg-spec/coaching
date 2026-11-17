@@ -1,45 +1,105 @@
 {% extends 'base_public.html' %}
-{% block title %}Courses - Success Coaching{% endblock %}
+{% block title %}Courses — BrightMinds Academy{% endblock %}
 {% block content %}
-<section class="py-20 bg-light">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <h1 class="text-4xl font-heading text-dark mb-12">Our Courses</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white p-8 rounded-2xl shadow-lg border border-orange-100 relative overflow-hidden group hover:-translate-y-2 transition-transform">
-                <div class="absolute top-0 right-0 bg-primary text-white px-4 py-1 rounded-bl-2xl font-bold text-sm">Class 5-8</div>
-                <h3 class="text-2xl font-bold text-dark mt-4 mb-2">Foundation Batch</h3>
-                <p class="text-gray-600 mb-6">Building strong fundamentals for young minds. Covers Mathematics, Science, and English.</p>
-                <div class="flex flex-wrap gap-2 mb-6 justify-center">
-                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold">CBSE</span>
-                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-bold">ICSE</span>
-                </div>
-                <a href="{% url 'contact' %}" class="block w-full border-2 border-primary text-primary font-bold py-2 rounded-full group-hover:bg-primary group-hover:text-white transition-colors">Know More</a>
-            </div>
-            
-            <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-primary relative overflow-hidden group hover:-translate-y-2 transition-transform transform scale-105 z-10">
-                <div class="absolute top-0 right-0 bg-primary text-white px-4 py-1 rounded-bl-2xl font-bold text-sm">Class 9-10</div>
-                <div class="absolute -top-4 -left-4 text-6xl opacity-10">🎓</div>
-                <h3 class="text-2xl font-bold text-dark mt-4 mb-2">Board Prep Batch</h3>
-                <p class="text-gray-600 mb-6">Intensive preparation for board exams. Focus on concept clarity and previous year papers.</p>
-                <div class="flex flex-wrap gap-2 mb-6 justify-center">
-                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold">CBSE</span>
-                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-bold">ICSE</span>
-                </div>
-                <a href="{% url 'contact' %}" class="block w-full bg-primary text-white font-bold py-2 rounded-full shadow-lg hover:bg-orange-600 transition-colors">Know More</a>
-            </div>
-            
-            <div class="bg-white p-8 rounded-2xl shadow-lg border border-orange-100 relative overflow-hidden group hover:-translate-y-2 transition-transform">
-                <div class="absolute top-0 right-0 bg-primary text-white px-4 py-1 rounded-bl-2xl font-bold text-sm">Class 11-12</div>
-                <h3 class="text-2xl font-bold text-dark mt-4 mb-2">Senior Secondary</h3>
-                <p class="text-gray-600 mb-6">Specialized coaching for PCM, PCB, and Commerce streams. Career-focused guidance.</p>
-                <div class="flex flex-wrap gap-2 mb-6 justify-center">
-                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold">CBSE</span>
-                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-bold">ICSE</span>
-                </div>
-                <a href="{% url 'contact' %}" class="block w-full border-2 border-primary text-primary font-bold py-2 rounded-full group-hover:bg-primary group-hover:text-white transition-colors">Know More</a>
-            </div>
-        </div>
+
+<!-- ═══════════════════════════════════════════════════
+     COURSES HERO
+═══════════════════════════════════════════════════ -->
+<section class="relative overflow-hidden pt-32 pb-16" style="background: linear-gradient(145deg, #1A2E44 0%, #243B53 55%, #2E4A66 100%);">
+  <div class="dot-grid-light absolute inset-0 opacity-30 pointer-events-none"></div>
+  <div class="absolute top-[-140px] right-[-160px] w-[520px] h-[520px] rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(42,157,143,0.16) 0%, transparent 70%);"></div>
+  <div class="absolute bottom-[-90px] left-[-90px] w-[380px] h-[380px] rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(244,185,66,0.08) 0%, transparent 70%);"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+    <div class="inline-flex items-center gap-2 bg-white/[0.07] border border-white/15 text-white/85 rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6 backdrop-blur-sm">
+      <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
+      Structured Learning Pathways
     </div>
+    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white font-black leading-[1.08] mb-5">
+      Our <span class="gradient-text">Courses</span>
+    </h1>
+    <p class="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+      From foundation to competitive excellence — every program is designed to build conceptual depth, exam temperament, and confidence.
+    </p>
+  </div>
 </section>
+
+<!-- ═══════════════════════════════════════════════════
+     COURSES GRID
+═══════════════════════════════════════════════════ -->
+<section class="py-20 bg-lightBg geo-bg -mt-1">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-14">
+      <div class="accent-line mx-auto block"></div>
+      <h2 class="font-display text-3xl sm:text-4xl text-primary font-bold mb-3">Choose Your Program</h2>
+      <p class="text-muted text-lg max-w-2xl mx-auto">Pick the batch that fits your child's academic stage. All programs include doubt sessions, mock tests, and parent updates.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+      <!-- Card 1: Foundation -->
+      <div class="reveal-init delay-1 course-card bg-surface rounded-2xl border border-border p-8 shadow-soft relative overflow-hidden group">
+        <div class="absolute top-0 right-0 bg-teal text-white px-4 py-1.5 rounded-bl-2xl font-bold text-xs tracking-wide">Class 5–8</div>
+        <div class="w-14 h-14 rounded-2xl bg-teal/10 flex items-center justify-center text-3xl mb-5">🌱</div>
+        <h3 class="font-display text-2xl font-bold text-primary mb-2">Foundation Batch</h3>
+        <p class="text-muted text-sm leading-relaxed mb-5">Building strong fundamentals for young minds. Covers Mathematics, Science, and English with Olympiad groundwork.</p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-teal/10 text-teal-dark text-xs font-bold px-3 py-1 rounded-full">CBSE</span>
+          <span class="bg-teal/10 text-teal-dark text-xs font-bold px-3 py-1 rounded-full">ICSE</span>
+          <span class="bg-teal/10 text-teal-dark text-xs font-bold px-3 py-1 rounded-full">Olympiads</span>
+        </div>
+        <a href="{% url 'contact' %}" class="block w-full text-center border-2 border-teal text-teal font-bold py-3 rounded-xl group-hover:bg-teal group-hover:text-white transition-all duration-300">Know More</a>
+      </div>
+
+      <!-- Card 2: Board Prep (Featured) -->
+      <div class="reveal-init delay-2 course-card bg-surface rounded-2xl border-2 border-teal p-8 shadow-lg shadow-teal/10 relative overflow-hidden group md:scale-[1.03] z-10">
+        <div class="absolute top-0 right-0 bg-teal text-white px-4 py-1.5 rounded-bl-2xl font-bold text-xs tracking-wide">Class 9–10</div>
+        <div class="absolute top-3 left-3 bg-gold text-primary text-[10px] font-bold px-3 py-1 rounded-full tracking-wide uppercase">★ Most Popular</div>
+        <div class="w-14 h-14 rounded-2xl bg-teal/10 flex items-center justify-center text-3xl mb-5">🎓</div>
+        <h3 class="font-display text-2xl font-bold text-primary mb-2">Board Prep Batch</h3>
+        <p class="text-muted text-sm leading-relaxed mb-5">Intensive preparation for board exams. Focus on concept clarity, previous year papers, and score maximisation.</p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-teal/10 text-teal-dark text-xs font-bold px-3 py-1 rounded-full">CBSE</span>
+          <span class="bg-teal/10 text-teal-dark text-xs font-bold px-3 py-1 rounded-full">ICSE</span>
+          <span class="bg-teal/10 text-teal-dark text-xs font-bold px-3 py-1 rounded-full">State Board</span>
+        </div>
+        <a href="{% url 'contact' %}" class="block w-full text-center bg-teal text-white font-bold py-3 rounded-xl shadow-md hover:bg-teal-dark transition-all duration-300">Know More</a>
+      </div>
+
+      <!-- Card 3: Senior Secondary -->
+      <div class="reveal-init delay-3 course-card bg-surface rounded-2xl border border-border p-8 shadow-soft relative overflow-hidden group">
+        <div class="absolute top-0 right-0 bg-primary text-white px-4 py-1.5 rounded-bl-2xl font-bold text-xs tracking-wide">Class 11–12</div>
+        <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl mb-5">🚀</div>
+        <h3 class="font-display text-2xl font-bold text-primary mb-2">Senior Secondary</h3>
+        <p class="text-muted text-sm leading-relaxed mb-5">Specialized coaching for PCM, PCB, and Commerce streams. Career-focused guidance with JEE/NEET/CUET integration.</p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">CBSE</span>
+          <span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">ICSE</span>
+          <span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">JEE/NEET</span>
+        </div>
+        <a href="{% url 'contact' %}" class="block w-full text-center border-2 border-primary text-primary font-bold py-3 rounded-xl group-hover:bg-primary group-hover:text-white transition-all duration-300">Know More</a>
+      </div>
+
+    </div>
+
+    <!-- CTA strip -->
+    <div class="mt-16 text-center">
+      <div class="bg-surface rounded-2xl border border-border p-8 sm:p-10 shadow-soft max-w-3xl mx-auto">
+        <h3 class="font-display text-2xl font-bold text-primary mb-2">Not sure which batch is right?</h3>
+        <p class="text-muted text-sm mb-6 max-w-lg mx-auto">Talk to our counsellor — we'll help you pick the right program based on your child's current level and goals.</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href="{% url 'contact' %}" class="inline-flex items-center gap-2 bg-teal hover:bg-teal-dark text-white font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-300">
+            Talk to a Counsellor
+          </a>
+          <a href="#enrol" class="inline-flex items-center gap-2 bg-lightBg hover:bg-border text-primary font-semibold px-6 py-3 rounded-xl border border-border transition-all duration-300">
+            Book Free Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 {% endblock %}

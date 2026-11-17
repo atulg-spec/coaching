@@ -2,7 +2,7 @@
 {% block page_title %}Students{% endblock %}
 {% block page_actions %}
 <a href="{% url 'student_add' %}"
-    class="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-orange-600 transition shadow-sm">+
+    class="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-secondary transition shadow-sm">+
     Add Student</a>
 {% endblock %}
 {% block content %}
@@ -25,7 +25,7 @@
                 {% endif %}
             </form>
             <a href="/dashboard/students/add/"
-                class="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-orange-600 transition shadow-sm whitespace-nowrap w-full sm:w-auto text-center">
+                class="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-secondary transition shadow-sm whitespace-nowrap w-full sm:w-auto text-center">
                 + Add Student
             </a>
         </div>
@@ -53,7 +53,7 @@
                             <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-primary font-bold text-xs shrink-0">
                                 {{ student.user.first_name|first|upper }}{{ student.user.last_name|first|upper }}
                             </div>
-                            <span class="font-semibold text-dark">{{ student.user.get_full_name }}</span>
+                            <span class="font-semibold text-dark">{{ student.user.get_full_name }} (@{{ student.user.username }})</span>
                         </div>
                     </td>
                     <td class="px-6 py-3">
@@ -102,7 +102,7 @@
                         {{ student.user.first_name|first|upper }}{{ student.user.last_name|first|upper }}
                     </div>
                     <div>
-                        <div class="font-semibold text-dark text-base">{{ student.user.get_full_name }}</div>
+                        <div class="font-semibold text-dark text-base">{{ student.user.get_full_name }} (@{{ student.user.username }})</div>
                         <div class="font-mono text-xs text-primary font-semibold">{{ student.student_id }}</div>
                     </div>
                 </div>

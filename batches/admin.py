@@ -11,3 +11,11 @@ class BatchAdmin(admin.ModelAdmin):
     list_filter = ('class_level', 'board', 'is_active')
     search_fields = ('batch_name', 'batch_code')
     filter_horizontal = ('students', 'subjects')
+
+from .models import StudyMaterial
+
+@admin.register(StudyMaterial)
+class StudyMaterialAdmin(admin.ModelAdmin):
+    list_display = ('title', 'batch', 'uploaded_by', 'uploaded_at')
+    list_filter = ('batch', 'uploaded_at')
+    search_fields = ('title', 'description', 'batch__batch_name')

@@ -7,4 +7,5 @@ urlpatterns = [
     path('student/<int:student_id>/', views.student_attendance, name='student_attendance'),
     path('staff/mark/', views.mark_staff_attendance, name='mark_staff_attendance'),
     path('staff/reports/', views.staff_attendance_reports, name='staff_attendance_reports'),
+    path('staff/my-attendance/', views.staff_my_attendance, name='staff_my_attendance'),
 ]

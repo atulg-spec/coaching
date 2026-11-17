@@ -1,111 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Success Coaching Classes{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Yatra+One&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#FF6B00',
-                        secondary: '#1A6B72',
-                        accent: '#F5C518',
-                        light: '#FFF8F0',
-                        offwhite: '#FAFAF5',
-                        dark: '#1C1B4B',
-                    },
-                    fontFamily: {
-                        heading: ['"Yatra One"', 'cursive'],
-                        body: ['Hind', 'sans-serif'],
-                        accent: ['"Baloo 2"', 'cursive'],
-                    }
-                }
-            }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BrightMinds Academy — Where Toppers Are Made</title>
+  <meta name="description" content="BrightMinds Academy — India's most trusted coaching for Class 7–12. JEE, NEET, CUET, CBSE/ICSE Board Prep. Lucknow's #1 institute.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // New premium palette
+            primary:    { DEFAULT: '#243B53', light: '#334E6B', dark: '#1A2E44' },
+            teal:       { DEFAULT: '#2A9D8F', light: '#3DB8A8', dark: '#1F7A6E' },
+            gold:       { DEFAULT: '#F4B942', light: '#F7C96B', dark: '#D49A2A' },
+            surface:    '#FFFFFF',
+            lightBg:    '#F5F7FA',
+            darkText:   '#172B4D',
+            muted:      '#64748B',
+            border:     '#E2E8F0',
+            success:    '#16A34A',
+            warning:    '#D99A19',
+            danger:     '#DC5252',
+            // Legacy aliases (for any leftover classes in partials)
+            saffron:    { DEFAULT: '#F4B942', light: '#F7C96B', dark: '#D49A2A' },
+            navy:       { DEFAULT: '#243B53', light: '#334E6B', dark: '#1A2E44' },
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'serif'],
+            body:    ['"DM Sans"', 'sans-serif'],
+          }
         }
-    </script>
-    <style>
-        body { font-family: 'Hind', sans-serif; }
-        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Yatra One', cursive; }
-        .font-accent { font-family: 'Baloo 2', cursive; }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; color: #172B4D; background-color: #F5F7FA; overflow-x: hidden; }
+
+    /* ── Dot-grid background ── */
+    .dot-grid {
+      background-image: radial-gradient(circle, rgba(36,59,83,0.08) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+    }
+    .dot-grid-light {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.10) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+
+    /* ── Premium hero ── */
+    .hero-bg {
+      background: linear-gradient(145deg, #1A2E44 0%, #243B53 45%, #2E4A66 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: -140px; right: -160px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(42,157,143,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(244,185,66,0.10) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-stripe {
+      position: absolute;
+      top: 0; right: 0;
+      width: 50%; height: 100%;
+      background: linear-gradient(135deg, transparent 50%, rgba(42,157,143,0.08) 100%);
+      clip-path: polygon(35% 0, 100% 0, 100% 100%, 0% 100%);
+      pointer-events: none;
+    }
+
+    /* ── Announcement banner ── */
+    @keyframes pulse-teal {
+      0%, 100% { background-color: #2A9D8F; }
+      50%       { background-color: #3DB8A8; }
+    }
+    .banner-pulse { animation: pulse-teal 3.2s ease-in-out infinite; }
+
+    /* ── Floating trust badges ── */
+    @keyframes float-up {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-5px); }
+    }
+    .float-badge { animation: float-up 3.5s ease-in-out infinite; }
+    .float-badge:nth-child(2) { animation-delay: .7s; }
+    .float-badge:nth-child(3) { animation-delay: 1.4s; }
+
+    /* ── Reveal ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal-init  { opacity: 0; transform: translateY(30px); transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
+    .reveal-done  { opacity: 1; transform: translateY(0); }
+    .reveal-init.delay-1 { transition-delay: .08s; }
+    .reveal-init.delay-2 { transition-delay: .16s; }
+    .reveal-init.delay-3 { transition-delay: .24s; }
+    .reveal-init.delay-4 { transition-delay: .32s; }
+    .reveal-init.delay-5 { transition-delay: .40s; }
+    .reveal-init.delay-6 { transition-delay: .48s; }
+
+    /* ── Card hover ── */
+    .course-card { transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s cubic-bezier(.22,1,.36,1); }
+    .course-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(23,43,77,.10); }
+
+    /* ── Stat counter ── */
+    .stat-num { font-family: 'Playfair Display', serif; }
+
+    /* ── Nav ── */
+    #navbar { transition: box-shadow .35s ease, background .35s ease; }
+    #navbar.scrolled { box-shadow: 0 4px 28px rgba(23,43,77,.09); background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); }
+
+    /* ── Testimonial ── */
+    .testimonial-track { transition: transform .5s cubic-bezier(.22,1,.36,1); }
+
+    /* ── FAQ ── */
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(.22,1,.36,1), padding .3s ease; }
+    .faq-answer.open { max-height: 500px; }
+    .faq-icon { transition: transform .35s cubic-bezier(.22,1,.36,1); }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-item.open .faq-question { color: #2A9D8F; }
+
+    /* ── Results scroll ── */
+    .results-track { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .result-card   { scroll-snap-align: start; flex-shrink: 0; }
+
+    /* ── WhatsApp button ── */
+    @keyframes wa-bounce {
+      0%, 100% { transform: scale(1); }
+      30%       { transform: scale(1.12); }
+      60%       { transform: scale(.96); }
+    }
+    #wa-btn { animation: wa-bounce 4.5s ease-in-out infinite; }
+
+    /* ── Gold/teal accent line ── */
+    .accent-line {
+      display: inline-block;
+      width: 56px; height: 4px;
+      background: linear-gradient(90deg, #2A9D8F, #F4B942);
+      border-radius: 2px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Subtle geometric overlay ── */
+    .geo-bg {
+      background-image:
+        repeating-linear-gradient(60deg, rgba(42,157,143,.025) 0px, rgba(42,157,143,.025) 1px, transparent 1px, transparent 44px),
+        repeating-linear-gradient(-60deg, rgba(244,185,66,.02) 0px, rgba(244,185,66,.02) 1px, transparent 1px, transparent 44px);
+    }
+
+    /* ── Form focus ── */
+    .form-input:focus { outline: none; border-color: #2A9D8F; box-shadow: 0 0 0 3px rgba(42,157,143,.12); }
+
+    /* ── Gradient text (teal → gold) ── */
+    .gradient-text {
+      background: linear-gradient(135deg, #2A9D8F, #F4B942);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Faculty ── */
+    .faculty-card { border-left: 4px solid #F4B942; }
+
+    /* ── Mobile menu ── */
+    #mobile-menu { transition: max-height .4s cubic-bezier(.22,1,.36,1), opacity .3s ease; max-height: 0; overflow: hidden; opacity: 0; }
+    #mobile-menu.open { max-height: 600px; opacity: 1; }
+
+    /* ── Success pop ── */
+    @keyframes success-pop {
+      0%   { transform: scale(.88); opacity: 0; }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+    #form-success { animation: success-pop .45s cubic-bezier(.22,1,.36,1) forwards; }
+
+    /* ── Fee table ── */
+    .fee-row:nth-child(even) { background: rgba(36,59,83,.025); }
+
+    /* ── Scrollbar ── */
+    .results-track::-webkit-scrollbar { height: 4px; }
+    .results-track::-webkit-scrollbar-track { background: #E2E8F0; border-radius: 4px; }
+    .results-track::-webkit-scrollbar-thumb { background: #2A9D8F; border-radius: 4px; }
+
+    /* ── Refined focus ── */
+    a:focus-visible, button:focus-visible { outline: 2px solid #2A9D8F; outline-offset: 2px; border-radius: 4px; }
+
+    /* ── Softer shadows ── */
+    .shadow-soft { box-shadow: 0 2px 12px rgba(23,43,77,.06); }
+    .shadow-card { box-shadow: 0 4px 24px rgba(23,43,77,.07); }
+  </style>
 </head>
-<body class="bg-offwhite text-gray-800 antialiased flex flex-col min-h-screen">
-    <nav class="bg-white shadow border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20">
-                <div class="flex items-center">
-                    <a href="{% url 'home' %}" class="flex-shrink-0 flex items-center gap-2">
-                        <svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                        <span class="font-heading text-2xl text-dark">Success Coaching</span>
-                    </a>
-                </div>
-                <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8 font-medium">
-                    <a href="{% url 'home' %}" class="text-gray-600 hover:text-primary transition">Home</a>
-                    <a href="{% url 'about' %}" class="text-gray-600 hover:text-primary transition">About</a>
-                    <a href="{% url 'courses' %}" class="text-gray-600 hover:text-primary transition">Courses</a>
-                    <a href="#" class="text-gray-600 hover:text-primary transition">Batches</a>
-                    <a href="{% url 'contact' %}" class="text-gray-600 hover:text-primary transition">Contact</a>
-                </div>
-                <div class="hidden sm:flex items-center">
-                    <a href="/dashboard/" class="bg-gradient-to-r from-primary to-orange-500 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all">Student Login</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+<body class="font-body bg-lightBg">
 
-    {% if messages %}
-    <div class="max-w-7xl mx-auto px-4 mt-4">
-        {% for message in messages %}
-        <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
-            {{ message }}
+<!-- ═══════════════════════════════════════════════════
+     1. STICKY NAVIGATION
+═══════════════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-border/60" role="navigation" aria-label="Main navigation">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-18">
+
+      <!-- Logo -->
+      <a href="{% url 'home' %}" class="flex items-center gap-2.5 flex-shrink-0 group">
+        <div class="w-9 h-9 rounded-lg bg-primary group-hover:bg-teal flex items-center justify-center shadow-sm transition-colors duration-300">
+          <span class="text-white font-display font-bold text-lg leading-none">B</span>
         </div>
-        {% endfor %}
+        <div class="leading-tight">
+          <span class="font-display font-bold text-primary text-lg block leading-tight">BrightMinds</span>
+          <span class="text-teal text-[10px] font-bold tracking-[0.18em] uppercase block -mt-0.5">Academy</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <ul class="hidden lg:flex items-center gap-7 text-[13px] font-semibold text-darkText/80">
+        <li><a href="#courses"      class="hover:text-teal transition-colors duration-200">Courses</a></li>
+        <li><a href="#results"      class="hover:text-teal transition-colors duration-200">Results</a></li>
+        <li><a href="#faculty"      class="hover:text-teal transition-colors duration-200">Faculty</a></li>
+        <li><a href="#fees"         class="hover:text-teal transition-colors duration-200">Fees</a></li>
+        <li><a href="#faq"          class="hover:text-teal transition-colors duration-200">FAQ</a></li>
+        <li><a href="#contact"      class="hover:text-teal transition-colors duration-200">Contact</a></li>
+        {% if request.user.is_authenticated %}
+        <li><a href="{% url 'role_redirect' %}" class="text-primary font-bold hover:text-teal transition-colors">Dashboard</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}" class="text-primary font-bold hover:text-teal transition-colors">Login</a></li>
+        {% endif %}
+      </ul>
+
+      <!-- CTA + Hamburger -->
+      <div class="flex items-center gap-3">
+        <a href="#enrol" class="hidden sm:inline-flex items-center gap-1.5 bg-teal hover:bg-teal-dark text-white text-[13px] font-semibold px-5 py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+          <span>Free Demo Class</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+        <button id="menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-lightBg transition-colors" aria-label="Toggle menu">
+          <div id="hamburger" class="space-y-1.5">
+            <span class="block w-6 h-0.5 bg-primary transition-all"></span>
+            <span class="block w-6 h-0.5 bg-primary transition-all"></span>
+            <span class="block w-4 h-0.5 bg-primary transition-all"></span>
+          </div>
+        </button>
+      </div>
     </div>
-    {% endif %}
 
-    <main class="flex-grow">
-        {% block content %}{% endblock %}
-    </main>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" role="menu">
+      <ul class="py-3 space-y-0.5 border-t border-border/60">
+        <li><a href="#courses"  class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-medium text-[13px] transition-colors" role="menuitem">Courses</a></li>
+        <li><a href="#results"  class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-medium text-[13px] transition-colors" role="menuitem">Results</a></li>
+        <li><a href="#faculty"  class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-medium text-[13px] transition-colors" role="menuitem">Faculty</a></li>
+        <li><a href="#fees"     class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-medium text-[13px] transition-colors" role="menuitem">Fees</a></li>
+        <li><a href="#faq"      class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-medium text-[13px] transition-colors" role="menuitem">FAQ</a></li>
+        <li><a href="#contact"  class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-medium text-[13px] transition-colors" role="menuitem">Contact</a></li>
+        {% if request.user.is_authenticated %}
+        <li><a href="{% url 'role_redirect' %}" class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-bold text-[13px] transition-colors" role="menuitem">Dashboard</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}" class="block px-3 py-2.5 rounded-lg hover:bg-teal/5 hover:text-teal font-bold text-[13px] transition-colors" role="menuitem">Login</a></li>
+        {% endif %}
+        <li class="pt-2">
+          <a href="#enrol" class="block text-center bg-teal text-white font-semibold px-4 py-3 rounded-lg text-[13px] shadow-sm">Enrol Now / Free Demo</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-    <footer class="bg-dark text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <h4 class="font-heading text-2xl mb-4 text-accent">Success Coaching</h4>
-                <p class="text-gray-300 text-sm">Lucknow's trusted coaching for Class 5–12. Guiding students to success.</p>
-            </div>
-            <div>
-                <h4 class="font-bold mb-4">Quick Links</h4>
-                <ul class="space-y-2 text-sm text-gray-300">
-                    <li><a href="{% url 'home' %}" class="hover:text-white">Home</a></li>
-                    <li><a href="{% url 'about' %}" class="hover:text-white">About Us</a></li>
-                    <li><a href="{% url 'courses' %}" class="hover:text-white">Courses</a></li>
-                    <li><a href="{% url 'contact' %}" class="hover:text-white">Contact</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold mb-4">Contact</h4>
-                <ul class="space-y-2 text-sm text-gray-300">
-                    <li>123 Education Lane, Lucknow, UP</li>
-                    <li>Phone: +91 98765 43210</li>
-                    <li>Email: info@successcoaching.com</li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold mb-4">Follow Us</h4>
-                <div class="flex space-x-4">
-                    <div class="w-8 h-8 bg-gray-600 rounded-full"></div>
-                    <div class="w-8 h-8 bg-gray-600 rounded-full"></div>
-                    <div class="w-8 h-8 bg-gray-600 rounded-full"></div>
-                </div>
-            </div>
+<!-- ═══════════════════════════════════════════════════
+     ANNOUNCEMENT BANNER
+═══════════════════════════════════════════════════ -->
+<div class="banner-pulse fixed top-16 left-0 right-0 z-40 text-white text-center py-2 px-4 text-[11px] sm:text-[12px] font-semibold tracking-wide flex items-center justify-center gap-3 flex-wrap">
+  <span>🎓 Scholarship Admission Test — Every Sunday 10 AM</span>
+  <span class="hidden sm:inline opacity-60">·</span>
+  <span>Upto <strong>90% Fee Waiver</strong></span>
+  <span class="hidden sm:inline opacity-60">·</span>
+  <a href="#enrol" class="underline underline-offset-2 font-bold hover:text-gold transition-colors">Register Free →</a>
+</div>
+
+{% block content %}
+{% endblock %}
+
+<!-- ═══════════════════════════════════════════════════
+     12. FOOTER
+═══════════════════════════════════════════════════ -->
+<footer class="bg-primary-dark" style="background:#1A2E44;">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-14">
+
+      <!-- Logo + tagline -->
+      <div>
+        <div class="flex items-center gap-2.5 mb-5">
+          <div class="w-10 h-10 rounded-xl bg-teal flex items-center justify-center shadow">
+            <span class="text-white font-display font-bold text-xl">B</span>
+          </div>
+          <div>
+            <span class="font-display font-bold text-white text-lg block leading-tight">BrightMinds</span>
+            <span class="text-teal text-[10px] font-bold tracking-[0.18em] uppercase block -mt-0.5">Academy</span>
+          </div>
         </div>
-        <div class="mt-8 pt-8 border-t border-gray-700 text-center text-sm text-gray-400">
-            Powered by Success Coaching Classes
+        <p class="text-white/60 text-sm leading-relaxed italic font-display">"Where Toppers Are Made"</p>
+        <p class="text-white/35 text-xs mt-4 leading-relaxed">15+ years of excellence. 10,000+ students. Pan-India reach.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-white/90 font-bold text-[11px] uppercase tracking-[0.18em] mb-5">Quick Links</h4>
+        <ul class="space-y-2.5 text-[13px]">
+          <li><a href="#courses"      class="text-white/50 hover:text-teal transition-colors duration-200">Courses & Programs</a></li>
+          <li><a href="#results"      class="text-white/50 hover:text-teal transition-colors duration-200">Student Results</a></li>
+          <li><a href="#faculty"      class="text-white/50 hover:text-teal transition-colors duration-200">Our Faculty</a></li>
+          <li><a href="#fees"         class="text-white/50 hover:text-teal transition-colors duration-200">Batch & Fees</a></li>
+          <li><a href="#enrol"        class="text-white/50 hover:text-teal transition-colors duration-200">Free Demo Class</a></li>
+          <li><a href="#faq"          class="text-white/50 hover:text-teal transition-colors duration-200">FAQ</a></li>
+          {% if request.user.is_authenticated %}
+          <li><a href="{% url 'role_redirect' %}" class="text-teal font-semibold hover:text-teal-light transition-colors">Dashboard</a></li>
+          {% else %}
+          <li><a href="{% url 'login' %}" class="text-teal font-semibold hover:text-teal-light transition-colors">Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h4 class="text-white/90 font-bold text-[11px] uppercase tracking-[0.18em] mb-5">Contact</h4>
+        <ul class="space-y-3.5 text-[13px]">
+          <li class="flex items-start gap-2.5 text-white/50">
+            <span class="mt-0.5 text-teal">📍</span>
+            <span>12, Vibhav Khand, Gomti Nagar, Lucknow – 226010</span>
+          </li>
+          <li>
+            <a href="https://wa.me/917800000000" class="flex items-center gap-2.5 text-white/50 hover:text-success transition-colors duration-200">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              +91 78000 00000
+            </a>
+          </li>
+          <li>
+            <a href="mailto:info@brightmindsacademy.in" class="flex items-center gap-2.5 text-white/50 hover:text-teal transition-colors duration-200">
+              <span class="text-teal">✉</span> info@brightmindsacademy.in
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Follow Us -->
+      <div>
+        <h4 class="text-white/90 font-bold text-[11px] uppercase tracking-[0.18em] mb-5">Follow Us</h4>
+        <div class="flex flex-wrap gap-2.5 mb-7">
+          <a href="#" aria-label="YouTube" class="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-danger flex items-center justify-center text-white/70 hover:text-white transition-all duration-200">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-danger flex items-center justify-center text-white/70 hover:text-white transition-all duration-200">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-primary-light flex items-center justify-center text-white/70 hover:text-white transition-all duration-200">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="https://wa.me/917800000000" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-success flex items-center justify-center text-white/70 hover:text-white transition-all duration-200">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
         </div>
-    </footer>
+        <a href="https://wa.me/917800000000"
+          class="inline-flex items-center gap-2 bg-success hover:bg-success/90 text-white font-semibold text-[13px] px-5 py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+
+    </div>
+
+    <div class="border-t border-white/[0.06] pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-white/25">
+      <p>© 2025 BrightMinds Academy. All rights reserved.</p>
+      <p>Designed with ❤ in Lucknow, India 🇮🇳</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════
+     FLOATING ELEMENTS
+═══════════════════════════════════════════════════ -->
+
+<!-- WhatsApp Floating Button -->
+<a id="wa-btn" href="https://wa.me/917800000000" target="_blank" rel="noopener noreferrer"
+   title="Chat on WhatsApp"
+   class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-success hover:bg-success/90 flex items-center justify-center shadow-xl shadow-success/25 transition-colors duration-200">
+  <svg class="w-7 h-7 fill-white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- Back to Top Button -->
+<button id="back-top" aria-label="Back to top"
+  class="fixed bottom-24 right-6 z-50 w-11 h-11 rounded-full bg-primary hover:bg-teal text-white flex items-center justify-center shadow-lg transition-all duration-200 opacity-0 pointer-events-none">
+  ↑
+</button>
+
+<!-- ═══════════════════════════════════════════════════
+     VANILLA JS
+═══════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── 1. Sticky nav shadow ── */
+  const navbar = document.getElementById('navbar');
+  function handleNavScroll() {
+    if (window.scrollY > 60) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', handleNavScroll, { passive: true });
+
+  /* ── 2. Mobile menu toggle ── */
+  const menuBtn     = document.getElementById('menu-btn');
+  const mobileMenu  = document.getElementById('mobile-menu');
+  let menuOpen = false;
+  menuBtn.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('open', menuOpen);
+    menuBtn.setAttribute('aria-expanded', menuOpen);
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+  }));
+
+  /* ── 3. Intersection Observer for scroll animations ── */
+  const revealEls = document.querySelectorAll('.reveal-init');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('reveal-done');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  /* ── 4. Counter animation ── */
+  function animateCounter(el, target, duration) {
+    const start = performance.now();
+    const suffix = el.dataset.suffix || '';
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = current.toLocaleString('en-IN') + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const statsSection = document.getElementById('stats');
+  let countersDone = false;
+  const statsObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !countersDone) {
+      countersDone = true;
+      document.querySelectorAll('[data-target]').forEach(el => {
+        animateCounter(el, parseInt(el.dataset.target), 1800);
+      });
+      statsObserver.unobserve(statsSection);
+    }
+  }, { threshold: 0.3 });
+  if (statsSection) statsObserver.observe(statsSection);
+
+  /* ── 5. Testimonial Carousel ── */
+  const track       = document.getElementById('testimonial-track');
+  const prevBtn     = document.getElementById('prev-btn');
+  const nextBtn     = document.getElementById('next-btn');
+  const dotsContainer = document.getElementById('testimonial-dots');
+  const slides      = track ? track.children : [];
+  let currentIdx    = 0;
+  const total       = slides.length;
+
+  if (dotsContainer) {
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('button');
+      d.className = 'w-2 h-2 rounded-full transition-all ' + (i === 0 ? 'bg-teal w-5' : 'bg-border');
+      d.setAttribute('aria-label', 'Slide ' + (i + 1));
+      d.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(d);
+    }
+  }
+
+  function goTo(idx) {
+    if (!track) return;
+    currentIdx = (idx + total) % total;
+    track.style.transform = 'translateX(-' + (currentIdx * 100) + '%)';
+    if (dotsContainer) {
+      dotsContainer.querySelectorAll('button').forEach((d, i) => {
+        d.className = 'w-2 h-2 rounded-full transition-all ' + (i === currentIdx ? 'bg-teal w-5' : 'bg-border');
+      });
+    }
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIdx - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIdx + 1));
+
+  if (track) {
+    let autoPlay = setInterval(() => goTo(currentIdx + 1), 5000);
+    track.addEventListener('mouseenter', () => clearInterval(autoPlay));
+    track.addEventListener('mouseleave', () => { autoPlay = setInterval(() => goTo(currentIdx + 1), 5000); });
+  }
+
+  /* ── 6. FAQ Accordion ── */
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const btn    = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      faqItems.forEach(fi => {
+        fi.classList.remove('open');
+        fi.querySelector('.faq-answer').classList.remove('open');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.classList.add('open');
+      }
+    });
+  });
+
+  /* ── 7. Form Validation + Success ── */
+  const submitBtn    = document.getElementById('submit-btn');
+  if (!submitBtn) return;
+  const formError    = document.getElementById('form-error');
+  const formSuccess  = document.getElementById('form-success');
+  const formBody     = document.getElementById('form-body');
+
+  function showError(msg) {
+    formError.textContent = msg;
+    formError.classList.remove('hidden');
+    setTimeout(() => formError.classList.add('hidden'), 4000);
+  }
+
+  submitBtn && submitBtn.addEventListener('click', () => {
+    const name   = document.getElementById('f-name').value.trim();
+    const cls    = document.getElementById('f-class').value;
+    const stream = document.getElementById('f-stream').value;
+    const phone  = document.getElementById('f-phone').value.trim();
+    const city   = document.getElementById('f-city').value.trim();
+    const mode   = document.querySelector('input[name="mode"]:checked');
+
+    if (!name)               return showError('Please enter the student\'s name.');
+    if (!cls)                return showError('Please select the current class.');
+    if (!stream)             return showError('Please select the stream.');
+    if (!/^\d{10}$/.test(phone)) return showError('Please enter a valid 10-digit phone number.');
+    if (!city)               return showError('Please enter your city.');
+    if (!mode)               return showError('Please select a preferred mode (Online / Offline).');
+
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '';
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled = true;
+
+    fetch('/book-demo/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: JSON.stringify({ name, cls, stream, phone, city, mode: mode.value })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.status === 'success') {
+        formBody.classList.add('hidden');
+        formSuccess.classList.remove('hidden');
+      } else {
+        showError('Something went wrong. Please try again.');
+        submitBtn.textContent = '📅 Book My Free Demo Class';
+        submitBtn.disabled = false;
+      }
+    })
+    .catch(e => {
+      showError('Network error. Please try again.');
+      submitBtn.textContent = '📅 Book My Free Demo Class';
+      submitBtn.disabled = false;
+    });
+  });
+
+  /* ── 8. Back-to-top button ── */
+  const backTop = document.getElementById('back-top');
+  function handleBackTop() {
+    if (window.scrollY > 400) {
+      backTop.style.opacity = '1';
+      backTop.style.pointerEvents = 'auto';
+    } else {
+      backTop.style.opacity = '0';
+      backTop.style.pointerEvents = 'none';
+    }
+  }
+  window.addEventListener('scroll', handleBackTop, { passive: true });
+  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+})();
+</script>
 </body>
 </html>

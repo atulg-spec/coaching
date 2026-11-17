@@ -6,8 +6,8 @@
 
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
     {% for batch in my_batches %}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="p-5 bg-gradient-to-r from-orange-50 to-white border-b border-gray-100">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:-translate-y-0.5 transition-all hover:shadow-md">
+        <div class="p-5 bg-gradient-to-r from-primary/10 to-white border-b border-gray-100">
             <h3 class="font-bold text-dark text-lg">{{ batch.batch_name }}</h3>
             <p class="text-xs text-gray-500 mt-1 font-mono">{{ batch.batch_code }}</p>
         </div>

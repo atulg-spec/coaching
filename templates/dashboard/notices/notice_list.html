@@ -1,0 +1,62 @@
+{% extends base_template %}
+{% block title %}Notices — Success Coaching{% endblock %}
+{% block page_title %}Notices{% endblock %}
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <div></div>
+    {% if is_admin %}
+    <a href="{% url 'notice_add' %}" class="bg-primary text-white px-4 py-2 rounded font-medium hover:bg-[#102A43] transition shadow-sm text-sm flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        Add Notice
+    </a>
+    {% endif %}
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+        <h2 class="font-bold text-dark">All Notices</h2>
+    </div>
+    
+    <div class="divide-y divide-gray-100">
+        {% for notice in notices %}
+        <div class="p-6 hover:bg-gray-50 transition">
+            <div class="flex justify-between items-start gap-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-lg font-bold text-dark">{{ notice.title }}</h3>
+                        {% if notice.target_audience == 'staff' %}
+                        <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Staff Only</span>
+                        {% else %}
+                        <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">All Users</span>
+                        {% endif %}
+                        
+                        {% if not notice.is_active %}
+                        <span class="bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Inactive</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-sm text-gray-600 whitespace-pre-wrap">{{ notice.content }}</p>
+                    <p class="text-xs text-gray-400 mt-3 font-medium">Posted on {{ notice.date_posted|date:"M d, Y, h:i A" }}</p>
+                </div>
+                
+                {% if is_admin %}
+                <div class="flex items-center gap-2 shrink-0">
+                    <a href="{% url 'notice_edit' notice.pk %}" class="p-2 text-gray-400 hover:text-secondary bg-gray-50 hover:bg-teal-50 rounded-lg transition" title="Edit">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </a>
+                    <a href="{% url 'notice_delete' notice.pk %}" class="p-2 text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 rounded-lg transition" title="Delete">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="p-10 text-center">
+            <div class="text-4xl mb-3">📢</div>
+            <h3 class="text-lg font-bold text-dark mb-1">No notices yet</h3>
+            <p class="text-gray-500 text-sm">{% if is_admin %}Create a notice to broadcast information.{% else %}There are no active notices right now.{% endif %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -307,11 +307,13 @@ class InquiryAdmin(admin.ModelAdmin):
     def follow_up_status(self, obj):
         if obj.is_followed_up:
             return format_html(
-                '<span style="color:#16a34a;font-weight:600;">✓ Followed Up</span>'
+                '<span style="color:#16a34a;font-weight:600;">{}</span>',
+                '✓ Followed Up'
             )
 
         return format_html(
-            '<span style="color:#dc2626;font-weight:600;">✗ Pending</span>'
+            '<span style="color:#dc2626;font-weight:600;">{}</span>',
+            '✗ Pending'
         )
 
     follow_up_status.short_description = "Status"

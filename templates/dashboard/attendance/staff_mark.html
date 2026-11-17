@@ -70,7 +70,7 @@
                                         {{ item.staff.user.first_name|first|upper }}
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-gray-800">{{ item.staff.user.get_full_name }}</p>
+                                        <p class="font-semibold text-gray-800">{{ item.staff.user.get_full_name }} (@{{ item.staff.user.username }})</p>
                                         <p class="text-xs text-gray-400 font-mono mt-0.5">{{ item.staff.designation }}</p>
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
 
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sticky bottom-0 z-10 flex justify-end gap-3 backdrop-blur-sm bg-white/95">
             <button type="submit"
-                class="px-8 py-2.5 bg-gradient-to-r from-primary to-orange-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-orange-600 transition-all duration-200 shadow-md text-sm flex items-center justify-center gap-2">
+                class="px-8 py-2.5 bg-primary hover:bg-[#102A43] text-white rounded-xl font-bold transition-all duration-200 shadow-md text-sm flex items-center justify-center gap-2">
                 Save Attendance
             </button>
         </div>

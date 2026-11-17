@@ -129,3 +129,42 @@ def subject_edit(request, pk):
     else:
         form = SubjectForm(instance=subject)
     return render(request, 'dashboard/batches/subject_form.html', {'form': form, 'title': 'Edit Subject'})
+
+from .models import StudyMaterial
+from .forms import StudyMaterialForm
+
+@staff_or_admin_required
+def upload_material(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+    if request.user.role != 'admin' and batch.teacher != request.user.staff:
+        messages.error(request, "You are not authorized to upload material for this batch.")
+        return redirect('batch_detail', pk=batch_id)
+        
+    if request.method == 'POST':
+        form = StudyMaterialForm(request.POST, request.FILES)
+        if form.is_valid():
+            material = form.save(commit=False)
+            material.batch = batch
+            material.uploaded_by = request.user
+            material.save()
+            messages.success(request, "Study material uploaded successfully.")
+            return redirect('batch_detail', pk=batch_id)
+    else:
+        form = StudyMaterialForm()
+        
+    return render(request, 'dashboard/batches/upload_material.html', {
+        'form': form,
+        'batch': batch
+    })
+
+@staff_or_admin_required
+def delete_material(request, material_id):
+    material = get_object_or_404(StudyMaterial, id=material_id)
+    batch_id = material.batch.id
+    if request.user.role == 'admin' or material.batch.teacher == request.user.staff:
+        material.file.delete()
+        material.delete()
+        messages.success(request, "Material deleted.")
+    else:
+        messages.error(request, "Not authorized to delete this material.")
+    return redirect('batch_detail', pk=batch_id)

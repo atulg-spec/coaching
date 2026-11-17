@@ -2,14 +2,29 @@
 {% block title %}My Dashboard — Success Coaching{% endblock %}
 {% block content %}
 
+{% if active_notices %}
+<div class="mb-6 space-y-3">
+    {% for notice in active_notices %}
+    <div class="bg-amber-50/70 border border-amber-200 text-dark rounded-xl p-4 flex items-start gap-3 shadow-sm">
+        <span class="text-xl">📢</span>
+        <div>
+            <h4 class="font-bold text-sm text-dark">{{ notice.title }}</h4>
+            <p class="text-sm mt-1 text-slate-700">{{ notice.content }}</p>
+            <p class="text-xs text-[#D99A19] mt-2 font-medium">{{ notice.date_posted|date:"M d, Y" }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <!-- Welcome Banner -->
-<div class="bg-gradient-to-r from-dark to-secondary rounded-2xl p-6 text-white mb-6 shadow-lg">
+<div class="bg-gradient-to-r from-[#102A43] to-[#243B53] rounded-2xl p-6 text-white mb-6 shadow-lg">
     <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
-            <p class="text-orange-300 text-sm font-medium">Welcome back 👋</p>
+            <p class="text-accent text-sm font-semibold tracking-wide">Welcome back 👋</p>
             <h1 class="text-2xl font-heading mt-1">{{ student.user.get_full_name }}</h1>
-            <p class="text-gray-300 text-sm mt-1">
-                <span class="bg-white/10 px-2 py-0.5 rounded font-mono">{{ student.student_id }}</span>
+            <p class="text-slate-300 text-sm mt-1">
+                <span class="bg-white/10 px-2 py-0.5 rounded font-mono text-accent">{{ student.student_id }}</span>
                 &nbsp;·&nbsp; Class {{ student.current_class }} {{ student.board }}
                 &nbsp;·&nbsp; {{ student.school_name }}
             </p>
@@ -20,27 +35,27 @@
 
 <!-- Quick Stats -->
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-border text-center">
         <p class="text-2xl font-bold text-primary">{{ my_batches.count }}</p>
-        <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">Enrolled Batches</p>
+        <p class="text-xs text-muted mt-1 font-medium uppercase tracking-wide">Enrolled Batches</p>
     </div>
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-        <p class="text-2xl font-bold {% if pending_fees > 0 %}text-red-600{% else %}text-green-600{% endif %}">{{ pending_fees }}</p>
-        <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">Pending Fees</p>
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-border text-center">
+        <p class="text-2xl font-bold {% if pending_fees > 0 %}text-[#DC5252]{% else %}text-[#16A34A]{% endif %}">{{ pending_fees }}</p>
+        <p class="text-xs text-muted mt-1 font-medium uppercase tracking-wide">Pending Fees</p>
     </div>
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-        <p class="text-2xl font-bold text-green-600">{{ paid_fees }}</p>
-        <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">Paid Months</p>
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-border text-center">
+        <p class="text-2xl font-bold text-[#16A34A]">{{ paid_fees }}</p>
+        <p class="text-xs text-muted mt-1 font-medium uppercase tracking-wide">Paid Months</p>
     </div>
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-border text-center">
         <p class="text-2xl font-bold text-secondary">{{ today|date:"d" }}</p>
-        <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">{{ today|date:"M Y" }}</p>
+        <p class="text-xs text-muted mt-1 font-medium uppercase tracking-wide">{{ today|date:"M Y" }}</p>
     </div>
 </div>
 
 <!-- Attendance This Month -->
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-    <div class="px-5 py-4 border-b border-gray-100 bg-gray-50">
+<div class="bg-white rounded-xl shadow-sm border border-border overflow-hidden mb-6">
+    <div class="px-5 py-4 border-b border-border bg-slate-50/50">
         <h2 class="font-bold text-dark">📊 This Month's Attendance</h2>
     </div>
     <div class="p-5 space-y-4">
@@ -48,33 +63,33 @@
         <div>
             <div class="flex justify-between items-center mb-1">
                 <p class="text-sm font-semibold text-dark">{{ stat.batch.batch_name }}</p>
-                <span class="text-sm font-bold {% if stat.percentage >= 75 %}text-green-600{% elif stat.percentage >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                <span class="text-sm font-bold {% if stat.percentage >= 75 %}text-[#16A34A]{% elif stat.percentage >= 50 %}text-[#D99A19]{% else %}text-[#DC5252]{% endif %}">
                     {{ stat.percentage }}%
                 </span>
             </div>
-            <div class="w-full bg-gray-100 rounded-full h-2.5">
-                <div class="h-2.5 rounded-full transition-all {% if stat.percentage >= 75 %}bg-green-500{% elif stat.percentage >= 50 %}bg-yellow-400{% else %}bg-red-500{% endif %}"
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+                <div class="h-2.5 rounded-full transition-all {% if stat.percentage >= 75 %}bg-[#16A34A]{% elif stat.percentage >= 50 %}bg-accent{% else %}bg-[#DC5252]{% endif %}"
                      style="width: {{ stat.percentage }}%"></div>
             </div>
-            <p class="text-xs text-gray-400 mt-1">{{ stat.present }} present out of {{ stat.total }} classes</p>
+            <p class="text-xs text-muted mt-1">{{ stat.present }} present out of {{ stat.total }} classes</p>
             {% if stat.percentage < 75 and stat.total > 0 %}
-            <p class="text-xs text-red-500 font-semibold mt-1">⚠️ Low attendance! Talk to your teacher.</p>
+            <p class="text-xs text-[#DC5252] font-semibold mt-1">⚠️ Low attendance! Talk to your teacher.</p>
             {% endif %}
         </div>
         {% empty %}
-        <p class="text-gray-400 text-sm text-center py-4">No attendance data this month.</p>
+        <p class="text-muted text-sm text-center py-4">No attendance data this month.</p>
         {% endfor %}
     </div>
     <div class="px-5 pb-5">
-        <a href="{% url 'student_portal_attendance' %}" class="block text-center text-sm text-primary hover:underline font-semibold">View full attendance history →</a>
+        <a href="{% url 'student_portal_attendance' %}" class="block text-center text-sm text-secondary hover:underline font-semibold">View full attendance history →</a>
     </div>
 </div>
 
 <!-- Enrolled Batches Quick View -->
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="px-5 py-4 border-b border-gray-100 bg-gray-50 flex justify-between">
+<div class="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+    <div class="px-5 py-4 border-b border-border bg-slate-50/50 flex justify-between">
         <h2 class="font-bold text-dark">📚 My Batches</h2>
-        <a href="{% url 'student_portal_timetable' %}" class="text-xs text-primary hover:underline font-semibold">Full timetable →</a>
+        <a href="{% url 'student_portal_timetable' %}" class="text-xs text-secondary hover:underline font-semibold">Full timetable →</a>
     </div>
     <div class="divide-y divide-gray-50">
         {% for batch in my_batches %}

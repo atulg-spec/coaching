@@ -1,0 +1,25 @@
+{% extends base_template %}
+{% load tailwind_filters %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+        <h2 class="font-bold text-dark">{{ title }}</h2>
+        <a href="{% url 'notice_list' %}" class="text-sm text-gray-500 hover:text-dark">← Back to Notices</a>
+    </div>
+    
+    <div class="p-6">
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form|crispy }}
+            
+            <div class="pt-4 flex gap-3">
+                <button type="submit" class="bg-primary text-white px-5 py-2 rounded-lg font-medium hover:bg-[#102A43] transition shadow-sm">Save Notice</button>
+                <a href="{% url 'notice_list' %}" class="px-5 py-2 rounded-lg font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

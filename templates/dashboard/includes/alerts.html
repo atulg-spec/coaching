@@ -25,18 +25,18 @@
                         </svg>
                     </div>
                     {% else %}
-                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <div class="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center">
+                        <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                     {% endif %}
                 </div>
                 <div class="ml-3 flex-1">
-                    <p class="text-sm font-medium {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}text-emerald-900{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}text-red-900{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}text-amber-900{% else %}text-blue-900{% endif %}">
+                    <p class="text-sm font-medium {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}text-emerald-900{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}text-red-900{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}text-amber-900{% else %}text-teal-900{% endif %}">
                         {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}Success{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}Warning{% else %}Info{% endif %}
                     </p>
-                    <p class="text-sm {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}text-emerald-700{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}text-red-700{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}text-amber-700{% else %}text-blue-700{% endif %} mt-1">
+                    <p class="text-sm {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}text-emerald-700{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}text-red-700{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}text-amber-700{% else %}text-teal-700{% endif %} mt-1">
                         {{ message }}
                     </p>
                 </div>
@@ -49,7 +49,7 @@
                     </button>
                 </div>
             </div>
-            <div class="{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}bg-emerald-500{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}bg-red-500{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}bg-amber-500{% else %}bg-blue-500{% endif %} h-1 w-full"></div>
+            <div class="{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}bg-emerald-500{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}bg-red-500{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}bg-amber-500{% else %}bg-teal-500{% endif %} h-1 w-full"></div>
         </div>
         {% endfor %}
     </div>

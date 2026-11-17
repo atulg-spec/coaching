@@ -44,3 +44,14 @@ class Batch(models.Model):
     def __str__(self):
         return f"{self.batch_name} ({self.batch_code})"
 
+
+class StudyMaterial(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='study_materials')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    file = models.FileField(upload_to='study_materials/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by = models.ForeignKey('accounts.User', on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.title

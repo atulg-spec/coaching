@@ -247,3 +247,36 @@ def staff_salary_history(request):
     from .models import StaffSalary
     salaries = StaffSalary.objects.select_related('staff__user', 'processed_by').order_by('-month', '-payment_date')
     return render(request, 'dashboard/payments/staff_salary_history.html', {'salaries': salaries})
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+@admin_required
+@require_POST
+def mark_as_paid(request, pk):
+    payment = get_object_or_404(Payment, pk=pk)
+    if payment.status == 'paid':
+        return JsonResponse({'success': False, 'error': 'Already paid'})
+    
+    balance = payment.amount_due - payment.amount_paid
+    if balance <= 0:
+        return JsonResponse({'success': False, 'error': 'No balance due'})
+        
+    payment.amount_paid += balance
+    payment.status = 'paid'
+    payment.payment_mode = 'cash'
+    payment.payment_date = timezone.now().date()
+    payment.collected_by = request.user
+    if not payment.receipt_number:
+        payment.receipt_number = f"REC-{timezone.now().strftime('%Y%m%d%H%M%S')}-{payment.id}"
+    payment.save()
+    
+    PaymentTransaction.objects.create(
+        payment=payment,
+        amount=balance,
+        payment_mode='cash',
+        receipt_number=f"TXN-{timezone.now().strftime('%Y%m%d%H%M%S')}-{payment.id}",
+        collected_by=request.user
+    )
+    
+    return JsonResponse({'success': True})

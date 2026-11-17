@@ -2,20 +2,20 @@
 {% block page_title %}Batch Details: {{ batch.batch_name }}{% endblock %}
 {% block content %}
 <div class="mb-6 flex justify-between items-center">
-    <a href="{% url 'batch_list' %}" class="text-gray-500 hover:text-primary transition">&larr; Back to List</a>
+    <a href="{% url 'batch_list' %}" class="text-gray-500 hover:text-secondary transition">&larr; Back to List</a>
     <a href="{% url 'batch_edit' batch.pk %}" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded font-medium hover:bg-gray-50 transition shadow-sm">Edit Batch</a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden lg:col-span-1">
-        <div class="p-6 bg-gradient-to-br from-gray-50 to-orange-50 border-b border-gray-100 text-center">
+        <div class="p-6 bg-gradient-to-br from-slate-50 to-teal-50/30 border-b border-gray-100 text-center">
             <h2 class="text-2xl font-bold text-dark">{{ batch.batch_name }}</h2>
-            <p class="text-primary font-mono mt-1">{{ batch.batch_code }}</p>
+            <p class="text-secondary font-mono font-semibold mt-1">{{ batch.batch_code }}</p>
         </div>
         <div class="p-6 space-y-4 text-sm">
             <div class="flex justify-between border-b border-gray-50 pb-2">
                 <span class="text-gray-500">Teacher</span>
-                <span class="font-medium">{{ batch.teacher.user.get_full_name|default:"Unassigned" }}</span>
+                <span class="font-medium">{% if batch.teacher %}{{ batch.teacher.user.get_full_name }} (@{{ batch.teacher.user.username }}){% else %}Unassigned{% endif %}</span>
             </div>
             <div class="flex justify-between border-b border-gray-50 pb-2">
                 <span class="text-gray-500">Subject</span>
@@ -55,7 +55,7 @@
     {% if user.role == 'admin' %}
     <button 
       onclick="document.getElementById('addStudentModal').classList.remove('hidden')"
-      class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition">
+      class="bg-secondary hover:bg-teal-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm">
       + Add Student
     </button>
     {% endif %}
@@ -66,7 +66,7 @@
   <div class="overflow-x-auto">
     <table class="w-full text-sm">
       <thead>
-        <tr class="bg-orange-50 text-orange-800">
+        <tr class="bg-slate-100 text-dark">
           <th class="text-left p-3 rounded-l-lg">Student</th>
           <th class="text-left p-3">ID</th>
           <th class="text-left p-3">Class</th>
@@ -82,8 +82,8 @@
         <tr class="hover:bg-gray-50">
           <td class="p-3">
             <a href="{% url 'student_detail' student.id %}" 
-               class="font-medium text-gray-800 hover:text-orange-600">
-              {{ student.user.get_full_name }}
+               class="font-medium text-gray-800 hover:text-secondary">
+              {{ student.user.get_full_name }} (@{{ student.user.username }})
             </a>
           </td>
           <td class="p-3 text-gray-500">{{ student.student_id }}</td>
@@ -100,7 +100,7 @@
           <td class="p-3">
             <form method="post" 
                   action="{% url 'batch_remove_student' batch.id student.id %}"
-                  onsubmit="return confirm('Remove {{ student.user.get_full_name }} from this batch?')">
+                  onsubmit="return confirm('Remove {{ student.user.get_full_name }} (@{{ student.user.username }}) from this batch?')">
               {% csrf_token %}
               <button type="submit" 
                       class="text-red-500 hover:text-red-700 text-xs font-medium">
@@ -124,6 +124,48 @@
 </div>
 
 
+<!-- Study Materials -->
+<div class="bg-white rounded-2xl shadow p-6 mt-8">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-lg font-bold text-gray-800">
+      Study Materials
+      <span class="text-sm font-normal text-gray-500 ml-2">
+        {{ batch.study_materials.count }} file(s)
+      </span>
+    </h3>
+    <a href="{% url 'upload_material' batch.id %}" class="bg-secondary hover:bg-teal-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm">
+      + Upload Material
+    </a>
+  </div>
+  
+  {% if batch.study_materials.exists %}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {% for material in batch.study_materials.all %}
+    <div class="border border-gray-200 rounded-xl p-4 flex items-start gap-4 hover:border-secondary/30 transition">
+      <div class="w-10 h-10 bg-teal-50 text-secondary border border-teal-100 rounded-lg flex items-center justify-center shrink-0">
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+  </svg>
+</div>
+      <div class="flex-1">
+        <a href="{{ material.file.url }}" target="_blank" class="font-bold text-gray-800 hover:text-secondary">{{ material.title }}</a>
+        {% if material.description %}<p class="text-xs text-gray-500 mt-1">{{ material.description }}</p>{% endif %}
+        <p class="text-xs text-gray-400 mt-2">Uploaded by {{ material.uploaded_by.get_full_name|default:material.uploaded_by.username }} on {{ material.uploaded_at|date:"M d, Y" }}</p>
+      </div>
+      <a href="{% url 'delete_material' material.id %}" onclick="return confirm('Are you sure you want to delete this material?');" class="text-red-500 hover:text-red-700 text-xs font-medium">Delete</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-8 text-gray-400">
+    <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+</svg>
+    <p class="font-medium">No study materials uploaded yet.</p>
+  </div>
+  {% endif %}
+</div>
+
 <!-- Add Student Modal -->
 {% if user.role == 'admin' %}
 <div id="addStudentModal" 
@@ -143,7 +185,7 @@
              id="studentSearch"
              placeholder="Search by name or student ID..."
              oninput="filterStudents(this.value)"
-             class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
+             class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary">
     </div>
 
     <!-- Student List -->
@@ -152,12 +194,12 @@
         {% csrf_token %}
         <div class="space-y-2" id="studentOptions">
           {% for student in available_students %}
-          <label class="student-item flex items-center gap-3 p-3 rounded-xl hover:bg-orange-50 cursor-pointer border border-transparent hover:border-orange-200 transition"
-                 data-name="{{ student.user.get_full_name|lower }}"
+          <label class="student-item flex items-center gap-3 p-3 rounded-xl hover:bg-teal-50/50 cursor-pointer border border-transparent hover:border-teal-200 transition"
+                 data-name="{{ student.user.get_full_name|lower }} (@{{ student.user.username }})"
                  data-id="{{ student.student_id|lower }}">
-            <input type="radio" name="student_id" value="{{ student.id }}" class="accent-orange-500">
+            <input type="radio" name="student_id" value="{{ student.id }}" class="accent-teal-600">
             <div class="flex-1">
-              <p class="font-medium text-gray-800 text-sm">{{ student.user.get_full_name }}</p>
+              <p class="font-medium text-gray-800 text-sm">{{ student.user.get_full_name }} (@{{ student.user.username }})</p>
               <p class="text-xs text-gray-500">{{ student.student_id }} &middot; Class {{ student.current_class }} &middot; {{ student.board }}</p>
             </div>
           </label>
@@ -176,7 +218,7 @@
             Cancel
           </button>
           <button type="submit"
-                  class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl text-sm font-medium transition">
+                  class="flex-1 bg-secondary hover:bg-teal-700 text-white py-2 rounded-xl text-sm font-medium transition shadow-sm">
             Add to Batch
           </button>
         </div>
@@ -200,3 +242,5 @@ function filterStudents(query) {
     </div>
 </div>
 {% endblock %}
+
+

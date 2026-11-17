@@ -108,3 +108,28 @@ def student_profile(request):
     except Exception:
         return render(request, 'student_portal/no_profile.html', {})
     return render(request, 'student_portal/profile.html', {'student': student})
+
+@student_required
+def student_notices(request):
+    try:
+        student = request.user.student
+    except Exception:
+        return render(request, 'student_portal/no_profile.html', {})
+    from core.models import Notice
+    notices = Notice.objects.filter(target_audience='all', is_active=True).order_by('-date_posted')
+    return render(request, 'student_portal/notices.html', {'notices': notices, 'student': student})
+
+from batches.models import StudyMaterial
+
+@student_required
+def student_materials(request):
+    try:
+        student = request.user.student
+    except Exception:
+        return render(request, 'student_portal/no_profile.html', {})
+        
+    materials = StudyMaterial.objects.filter(batch__students=student).order_by('-uploaded_at')
+    
+    return render(request, 'student_portal/materials.html', {
+        'materials': materials
+    })

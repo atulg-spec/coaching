@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-x9rpd6k8dm5&#78@(-^$)q3!@)1too&dzky19h4g%y6b(daszn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -91,7 +91,8 @@ WSGI_APPLICATION = 'success_coaching.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'testdb.sqlite3',
     }
 }
 
@@ -120,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
