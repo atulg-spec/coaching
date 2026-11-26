@@ -1,0 +1,344 @@
+{% extends 'base_dashboard.html' %}
+
+{% block title %}Chatbot AI Settings — Success Coaching{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto py-4 px-2 sm:px-4">
+
+    <!-- Header Breadcrumb & Title -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+            <div class="flex items-center gap-2 text-xs text-muted mb-1">
+                <a href="{% url 'dashboard_home' %}" class="hover:text-primary transition">Dashboard</a>
+                <span>/</span>
+                <span class="text-dark font-medium">Chatbot Settings</span>
+            </div>
+            <h1 class="text-2xl font-bold text-navy flex items-center gap-2">
+                <span class="text-2xl">🤖</span> Cloudflare AI Chatbot Configuration
+            </h1>
+            <p class="text-sm text-muted mt-1">Manage Cloudflare Workers AI credentials, model tuning, and access control.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'chatbot_dashboard' %}" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-secondary text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                Open Chatbot
+            </a>
+            <a href="/admin/chatbot/chatbotconfig/" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition">
+                Django Admin
+            </a>
+        </div>
+    </div>
+
+    <!-- Live Status Banner -->
+    <div class="mb-6 p-4 rounded-xl border {% if is_configured %}bg-emerald-50/80 border-emerald-200{% else %}bg-amber-50/80 border-amber-200{% endif %} flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 {% if is_configured %}bg-emerald-100 text-emerald-600{% else %}bg-amber-100 text-amber-600{% endif %} font-bold text-lg">
+                {% if is_configured %}✓{% else %}!{% endif %}
+            </div>
+            <div>
+                <h3 class="font-bold text-sm {% if is_configured %}text-emerald-900{% else %}text-amber-900{% endif %}">
+                    {% if is_configured %}
+                        Cloudflare API Credentials Configured
+                    {% else %}
+                        Cloudflare API Credentials Missing
+                    {% endif %}
+                </h3>
+                <p class="text-xs {% if is_configured %}text-emerald-700{% else %}text-amber-700{% endif %} mt-0.5">
+                    {% if is_configured %}
+                        Your account is linked. Active Model: <code class="font-mono bg-white/70 px-1.5 py-0.5 rounded text-emerald-800 text-[11px]">{{ config.model_name }}</code>
+                    {% else %}
+                        Please enter your Cloudflare Account ID and API Token below to enable AI answers for students and staff.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Connection Test Trigger -->
+        <div class="flex items-center gap-2">
+            <button type="button" id="btnTestConnection" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 hover:border-secondary text-slate-700 hover:text-secondary rounded-lg text-xs font-semibold shadow-sm transition">
+                <span id="testSpinner" class="hidden animate-spin">⏳</span>
+                <span id="testIcon">⚡</span>
+                <span id="testBtnText">Test Cloudflare API Connection</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Test Results Box (Hidden by default) -->
+    <div id="testResultBox" class="hidden mb-6 p-4 rounded-xl border text-xs transition-all"></div>
+
+    <!-- Setup Guide Accordion / Helper -->
+    <div class="mb-6 bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+        <details class="group cursor-pointer">
+            <summary class="font-semibold text-sm text-navy flex items-center justify-between list-none">
+                <span class="flex items-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-xs flex items-center justify-center font-bold">i</span>
+                    Where do I find my Cloudflare API credentials?
+                </span>
+                <span class="text-muted group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600 space-y-2 leading-relaxed">
+                <p><strong>1. Cloudflare Account ID:</strong> Log in to <a href="https://dash.cloudflare.com" target="_blank" class="text-secondary font-medium underline">dash.cloudflare.com</a>. Select any domain or look at the right sidebar of your dashboard home where your <strong>Account ID</strong> (a 32-character hex string) is displayed.</p>
+                <p><strong>2. Cloudflare API Token:</strong> In Cloudflare, navigate to <strong>My Profile &rarr; API Tokens</strong> &rarr; click <strong>Create Token</strong>. Choose <em>Create Custom Token</em>, set permission: <strong>Account &rarr; Workers AI &rarr; Read / Edit</strong>, and generate your token.</p>
+                <p><strong>3. Models:</strong> Cloudflare Workers AI offers fast open models like <code>@cf/meta/llama-3.1-8b-instruct</code>, <code>@cf/meta/llama-3.2-3b-instruct</code>, and <code>@cf/mistral/mistral-7b-instruct-v0.1</code>.</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- Main Settings Form -->
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Card: Credentials -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                <div>
+                    <h2 class="font-bold text-navy text-sm flex items-center gap-2">
+                        <span>🔑</span> Cloudflare API Credentials
+                    </h2>
+                    <p class="text-xs text-muted">Required to connect with Cloudflare Workers AI REST API.</p>
+                </div>
+                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-700">Admin Only</span>
+            </div>
+            <div class="p-5 space-y-4">
+                <div>
+                    <label for="id_account_id" class="block text-xs font-semibold text-slate-700 mb-1">
+                        Cloudflare Account ID <span class="text-danger">*</span>
+                    </label>
+                    {{ form.account_id }}
+                    {% if form.account_id.errors %}
+                        <p class="text-xs text-danger mt-1">{{ form.account_id.errors.0 }}</p>
+                    {% endif %}
+                    <p class="text-[11px] text-muted mt-1">32-character identifier from your Cloudflare Dashboard.</p>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label for="id_api_token" class="block text-xs font-semibold text-slate-700">
+                            Cloudflare API Token <span class="text-danger">*</span>
+                        </label>
+                        <button type="button" id="toggleTokenVisibility" class="text-[11px] text-secondary hover:underline">Show / Hide</button>
+                    </div>
+                    {{ form.api_token }}
+                    {% if form.api_token.errors %}
+                        <p class="text-xs text-danger mt-1">{{ form.api_token.errors.0 }}</p>
+                    {% endif %}
+                    <p class="text-[11px] text-muted mt-1">Must have <strong>Workers AI</strong> access. Leave empty on save to keep the previously stored token.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: AI Model & Tuning -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50">
+                <h2 class="font-bold text-navy text-sm flex items-center gap-2">
+                    <span>⚙️</span> Model Selection & Persona Tuning
+                </h2>
+                <p class="text-xs text-muted">Select an AI model and customize how the chatbot assists students.</p>
+            </div>
+            <div class="p-5 space-y-4">
+
+                <!-- Quick Model Selector Buttons -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-2">Preset Models (Click to select):</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                        {% for model_val, model_label in models_list %}
+                        <button type="button" 
+                                onclick="document.getElementById('id_model_name').value = '{{ model_val }}'"
+                                class="text-left p-2.5 rounded-lg border border-slate-200 hover:border-secondary hover:bg-teal-50/50 transition text-xs">
+                            <div class="font-semibold text-slate-800">{{ model_label }}</div>
+                            <code class="text-[10px] text-muted font-mono">{{ model_val }}</code>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div>
+                    <label for="id_model_name" class="block text-xs font-semibold text-slate-700 mb-1">
+                        Active Model Identifier <span class="text-danger">*</span>
+                    </label>
+                    {{ form.model_name }}
+                    {% if form.model_name.errors %}
+                        <p class="text-xs text-danger mt-1">{{ form.model_name.errors.0 }}</p>
+                    {% endif %}
+                    <p class="text-[11px] text-muted mt-1">You can also type any custom model available in your Cloudflare Workers AI catalog.</p>
+                </div>
+
+                <div>
+                    <label for="id_system_prompt" class="block text-xs font-semibold text-slate-700 mb-1">
+                        System Prompt / Persona Instructions
+                    </label>
+                    {{ form.system_prompt }}
+                    {% if form.system_prompt.errors %}
+                        <p class="text-xs text-danger mt-1">{{ form.system_prompt.errors.0 }}</p>
+                    {% endif %}
+                    <p class="text-[11px] text-muted mt-1">Sets the AI's behavior, tone, coaching style, and safety boundaries.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div>
+                        <label for="id_temperature" class="block text-xs font-semibold text-slate-700 mb-1">
+                            Temperature (Creativity: 0.0 - 1.0)
+                        </label>
+                        {{ form.temperature }}
+                        <p class="text-[11px] text-muted mt-1">Lower values (0.2-0.5) are more precise; higher values (0.7-0.9) are more creative.</p>
+                    </div>
+
+                    <div>
+                        <label for="id_max_tokens" class="block text-xs font-semibold text-slate-700 mb-1">
+                            Max Generation Tokens
+                        </label>
+                        {{ form.max_tokens }}
+                        <p class="text-[11px] text-muted mt-1">Upper limit of response length (1024 is recommended for educational answers).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: Access Controls -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50">
+                <h2 class="font-bold text-navy text-sm flex items-center gap-2">
+                    <span>🛡️</span> Access Control & Platform Visibility
+                </h2>
+                <p class="text-xs text-muted">Control which user groups have access to the AI Chatbot.</p>
+            </div>
+            <div class="p-5 space-y-4">
+                <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
+                    {{ form.is_active }}
+                    <div>
+                        <div class="text-xs font-semibold text-slate-800">Global Chatbot Switch (Active)</div>
+                        <div class="text-[11px] text-muted">Master switch to turn AI chatbot service ON or OFF platform-wide.</div>
+                    </div>
+                </label>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
+                        {{ form.enable_for_students }}
+                        <div>
+                            <div class="text-xs font-semibold text-slate-800">Student Portal</div>
+                            <div class="text-[11px] text-muted">AI Tutor for enrolled students.</div>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
+                        {{ form.enable_for_staff }}
+                        <div>
+                            <div class="text-xs font-semibold text-slate-800">Staff & Teachers</div>
+                            <div class="text-[11px] text-muted">AI Assistant in Admin Dashboard.</div>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
+                        {{ form.enable_public_widget }}
+                        <div>
+                            <div class="text-xs font-semibold text-slate-800">Public Floating Widget</div>
+                            <div class="text-[11px] text-muted">Website inquiry assistant.</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button Bar -->
+        <div class="flex items-center justify-between pt-2">
+            <a href="{% url 'chatbot_dashboard' %}" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition">
+                Cancel
+            </a>
+            <button type="submit" class="px-6 py-2.5 bg-secondary hover:bg-teal-600 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                Save Chatbot Settings
+            </button>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    // Toggle token password visibility
+    const toggleBtn = document.getElementById('toggleTokenVisibility');
+    const tokenInput = document.getElementById('id_api_token');
+    if (toggleBtn && tokenInput) {
+        toggleBtn.addEventListener('click', function() {
+            if (tokenInput.type === 'password') {
+                tokenInput.type = 'text';
+                toggleBtn.textContent = 'Hide';
+            } else {
+                tokenInput.type = 'password';
+                toggleBtn.textContent = 'Show';
+            }
+        });
+    }
+
+    // Ajax Test Connection
+    const btnTest = document.getElementById('btnTestConnection');
+    const resultBox = document.getElementById('testResultBox');
+    const spinner = document.getElementById('testSpinner');
+    const icon = document.getElementById('testIcon');
+    const btnText = document.getElementById('testBtnText');
+
+    btnTest.addEventListener('click', function() {
+        const accountId = document.getElementById('id_account_id').value.trim();
+        const apiToken = document.getElementById('id_api_token').value.trim();
+        const modelName = document.getElementById('id_model_name').value.trim();
+
+        spinner.classList.remove('hidden');
+        icon.classList.add('hidden');
+        btnText.textContent = "Connecting to Cloudflare...";
+        btnTest.disabled = true;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const formData = new FormData();
+        formData.append('account_id', accountId);
+        formData.append('api_token', apiToken);
+        formData.append('model_name', modelName);
+
+        fetch("{% url 'chatbot_api_test_connection' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            resultBox.classList.remove('hidden');
+            if (data.success) {
+                resultBox.className = "mb-6 p-4 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-900";
+                resultBox.innerHTML = `
+                    <div class="flex items-start gap-2.5">
+                        <span class="text-base text-emerald-600">✓</span>
+                        <div>
+                            <p class="font-bold text-xs text-emerald-800">Connection Verified Successfully!</p>
+                            <p class="text-[11px] text-emerald-700 mt-0.5">${data.message || 'Cloudflare Workers AI replied successfully.'}</p>
+                            ${data.sample_reply ? `<div class="mt-2 p-2 rounded bg-white/80 border border-emerald-200 font-mono text-[11px] text-slate-700"><strong>AI Sample Output:</strong> "${data.sample_reply}"</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultBox.className = "mb-6 p-4 rounded-xl border bg-rose-50 border-rose-200 text-rose-900";
+                resultBox.innerHTML = `
+                    <div class="flex items-start gap-2.5">
+                        <span class="text-base text-rose-600">⚠️</span>
+                        <div>
+                            <p class="font-bold text-xs text-rose-800">Connection Failed</p>
+                            <p class="text-[11px] text-rose-700 mt-0.5">${data.error || 'Unknown error occurred while contacting Cloudflare.'}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        })
+        .catch(err => {
+            resultBox.classList.remove('hidden');
+            resultBox.className = "mb-6 p-4 rounded-xl border bg-rose-50 border-rose-200 text-rose-900";
+            resultBox.innerHTML = `<p class="font-bold text-xs">Network Error: ${err.message}</p>`;
+        })
+        .finally(() => {
+            spinner.classList.add('hidden');
+            icon.classList.remove('hidden');
+            btnText.textContent = "Test Cloudflare API Connection";
+            btnTest.disabled = false;
+        });
+    });
+</script>
+{% endblock %}

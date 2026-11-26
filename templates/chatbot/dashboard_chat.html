@@ -1,0 +1,480 @@
+{% extends 'base_dashboard.html' %}
+
+{% block title %}Natasha — Admin AI Assistant — Success Coaching{% endblock %}
+
+{% block content %}
+<div class="h-[calc(100vh-4.5rem)] flex flex-col md:flex-row gap-3 p-1">
+
+    <!-- Sidebar: Conversation History -->
+    <div id="chatSidebar" class="w-full md:w-72 bg-white rounded-xl border border-slate-200 flex flex-col shrink-0 overflow-hidden shadow-sm">
+        <!-- New Chat Button Header -->
+        <div class="p-3 border-b border-slate-100 flex items-center justify-between gap-2 bg-slate-50/60">
+            <button id="btnNewChat" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-secondary text-white text-xs font-semibold rounded-lg hover:bg-teal-600 transition shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                New Session
+            </button>
+            {% if is_admin %}
+            <a href="{% url 'chatbot_settings' %}" title="Chatbot & Model Settings" class="p-2 text-slate-500 hover:text-secondary hover:bg-teal-50 rounded-lg transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Conversations List -->
+        <div class="flex-1 overflow-y-auto p-2 space-y-1" id="conversationsList">
+            {% for conv in conversations %}
+            <div data-id="{{ conv.id }}" class="conv-item group flex items-center justify-between p-2.5 rounded-lg text-xs cursor-pointer transition {% if forloop.first %}bg-teal-50/80 text-secondary font-semibold border border-teal-200/60{% else %}text-slate-600 hover:bg-slate-50{% endif %}">
+                <div class="flex items-center gap-2 min-w-0 flex-1 truncate" onclick="selectConversation({{ conv.id }})">
+                    <span class="text-sm">💬</span>
+                    <span class="truncate conv-title">{{ conv.title }}</span>
+                </div>
+                <button onclick="deleteConversation({{ conv.id }}, event)" title="Delete" class="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-rose-500 rounded transition">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
+            </div>
+            {% empty %}
+            <div class="p-4 text-center text-xs text-muted">
+                No past sessions. Ask Natasha a question!
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Assistant Footer Info -->
+        <div class="p-3 border-t border-slate-100 bg-slate-50/40 text-[11px] text-muted flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span class="font-semibold text-slate-700">Natasha AI</span>
+            </span>
+            <span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded-full font-bold">ERP Intelligence</span>
+        </div>
+    </div>
+
+    <!-- Main Chat Container -->
+    <div class="flex-1 bg-white rounded-xl border border-slate-200 flex flex-col overflow-hidden shadow-sm">
+
+        <!-- Top Header of Active Conversation -->
+        <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#102A43] to-secondary text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                    N
+                </div>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h2 id="activeChatTitle" class="text-xs font-bold text-navy truncate">
+                            {{ active_conversation.title|default:"Natasha — Admin Personal Assistant" }}
+                        </h2>
+                        <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded">Connected to ERP</span>
+                    </div>
+                    <p class="text-[11px] text-muted flex items-center gap-1.5 mt-0.5">
+                        <span class="text-secondary font-medium">Natasha</span>
+                        <span>&bull;</span>
+                        <span>Personal Assistant for Institute Administrator</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                {% if is_admin %}
+                <a href="{% url 'chatbot_settings' %}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-600 bg-white border border-slate-200 rounded-lg hover:border-secondary transition shadow-2xs">
+                    <span>⚙️</span> Settings
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Messages Feed -->
+        <div id="messagesFeed" class="flex-1 overflow-y-auto p-4 space-y-4">
+
+            <!-- Suggested Quick Prompts (visible if conversation empty) -->
+            <div id="quickPromptsContainer" class="max-w-2xl mx-auto py-6 text-center">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#102A43] to-secondary text-white text-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
+                    👩‍💼
+                </div>
+                <h3 class="text-base font-bold text-navy">I'm Natasha, your Personal Institute Assistant</h3>
+                <p class="text-xs text-muted max-w-lg mx-auto mt-1 mb-5 leading-relaxed">
+                    Instead of navigating across multiple registers and screens, simply ask me in plain language to pull student records, inspect fee collections, find parent numbers, or summarize attendance.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left">
+                    <button onclick="sendQuickPrompt(this)" class="p-3 rounded-xl border border-slate-200 hover:border-secondary hover:bg-teal-50/40 text-xs text-slate-700 transition group shadow-2xs">
+                        <div class="font-semibold text-navy flex items-center gap-1.5">
+                            <span class="text-secondary">👥</span> Active Students Enrolled
+                        </div>
+                        <div class="text-[11px] text-muted mt-1">"How many active students are currently enrolled?"</div>
+                    </button>
+
+                    <button onclick="sendQuickPrompt(this)" class="p-3 rounded-xl border border-slate-200 hover:border-secondary hover:bg-teal-50/40 text-xs text-slate-700 transition group shadow-2xs">
+                        <div class="font-semibold text-navy flex items-center gap-1.5">
+                            <span class="text-rose-600">💳</span> Pending Fees Register
+                        </div>
+                        <div class="text-[11px] text-muted mt-1">"Show me all students whose fees are pending."</div>
+                    </button>
+
+                    <button onclick="sendQuickPrompt(this)" class="p-3 rounded-xl border border-slate-200 hover:border-secondary hover:bg-teal-50/40 text-xs text-slate-700 transition group shadow-2xs">
+                        <div class="font-semibold text-navy flex items-center gap-1.5">
+                            <span class="text-amber-600">📊</span> Highest Dues by Class
+                        </div>
+                        <div class="text-[11px] text-muted mt-1">"Which classes have the highest pending fees?"</div>
+                    </button>
+
+                    <button onclick="sendQuickPrompt(this)" class="p-3 rounded-xl border border-slate-200 hover:border-secondary hover:bg-teal-50/40 text-xs text-slate-700 transition group shadow-2xs">
+                        <div class="font-semibold text-navy flex items-center gap-1.5">
+                            <span class="text-rose-600">⚠️</span> Dues Above ₹5,000
+                        </div>
+                        <div class="text-[11px] text-muted mt-1">"Which students have outstanding dues above ₹5,000?"</div>
+                    </button>
+
+                    <button onclick="sendQuickPrompt(this)" class="p-3 rounded-xl border border-slate-200 hover:border-secondary hover:bg-teal-50/40 text-xs text-slate-700 transition group shadow-2xs">
+                        <div class="font-semibold text-navy flex items-center gap-1.5">
+                            <span class="text-emerald-600">💰</span> Fee Collections
+                        </div>
+                        <div class="text-[11px] text-muted mt-1">"How much fee have we collected this month?"</div>
+                    </button>
+
+                    <button onclick="sendQuickPrompt(this)" class="p-3 rounded-xl border border-slate-200 hover:border-secondary hover:bg-teal-50/40 text-xs text-slate-700 transition group shadow-2xs">
+                        <div class="font-semibold text-navy flex items-center gap-1.5">
+                            <span class="text-blue-600">📅</span> Attendance & Roll Call
+                        </div>
+                        <div class="text-[11px] text-muted mt-1">"Show today's attendance summary."</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages rendered via JS or initial load -->
+            <div id="messagesList" class="space-y-4"></div>
+
+            <!-- Typing indicator -->
+            <div id="typingIndicator" class="hidden flex items-start gap-3">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#102A43] to-secondary text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-xs">
+                    N
+                </div>
+                <div class="bg-slate-100 rounded-2xl rounded-tl-sm px-4 py-3 text-xs text-slate-600 flex items-center gap-1.5 shadow-xs">
+                    <span class="w-2 h-2 rounded-full bg-secondary animate-bounce"></span>
+                    <span class="w-2 h-2 rounded-full bg-secondary animate-bounce [animation-delay:0.2s]"></span>
+                    <span class="w-2 h-2 rounded-full bg-secondary animate-bounce [animation-delay:0.4s]"></span>
+                    <span class="text-[11px] text-muted ml-2">Natasha is querying the institute database...</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Message Input Bar -->
+        <div class="p-3 border-t border-slate-100 bg-white">
+            <form id="chatForm" class="flex items-end gap-2" onsubmit="handleChatSubmit(event)">
+                {% csrf_token %}
+                <div class="flex-1 relative rounded-xl border border-slate-200 focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/20 transition bg-slate-50/50">
+                    <textarea 
+                        id="userMessageInput" 
+                        rows="1" 
+                        placeholder="Ask Natasha anything (e.g., 'Show pending fees', 'What is Rahul Sharma's fee status?')..."
+                        class="w-full bg-transparent px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none resize-none max-h-32"
+                        onkeydown="handleKeyDown(event)"
+                        oninput="autoResize(this)"
+                    ></textarea>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="btnSend"
+                    class="h-10 px-4 bg-secondary text-white rounded-xl hover:bg-teal-600 transition flex items-center justify-center gap-1.5 text-xs font-semibold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                >
+                    <span>Ask Natasha</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </form>
+            <div class="flex items-center justify-between text-[10px] text-muted mt-2 px-1">
+                <span>Natasha queries live records directly from your institute database.</span>
+                <span class="text-secondary font-medium">Powered by Cloudflare Workers AI + ERP ORM</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Markdown and Rich Table Renderer -->
+<script>
+    let activeConversationId = {{ active_conversation.id|default:"null" }};
+    const messagesFeed = document.getElementById('messagesFeed');
+    const messagesList = document.getElementById('messagesList');
+    const quickPromptsContainer = document.getElementById('quickPromptsContainer');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const userMessageInput = document.getElementById('userMessageInput');
+    const btnSend = document.getElementById('btnSend');
+
+    function autoResize(el) {
+        el.style.height = 'auto';
+        el.style.height = (el.scrollHeight) + 'px';
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleChatSubmit(e);
+        }
+    }
+
+    function formatMarkdown(text) {
+        if (!text) return '';
+
+        // 1. Pre-process and render Markdown tables
+        // Find markdown table blocks (| ... |\n| --- |)
+        const tableRegex = /((?:\|[^\n]+\|\r?\n)+)/g;
+        text = text.replace(tableRegex, function(tableBlock) {
+            const lines = tableBlock.trim().split(/\r?\n/).filter(l => l.trim().startsWith('|'));
+            if (lines.length < 2) return tableBlock;
+
+            // Header line
+            const headerCells = lines[0].split('|').slice(1, -1).map(c => c.trim());
+            // Check if line 1 is separator (---)
+            let startIndex = 1;
+            if (lines[1].includes('---')) {
+                startIndex = 2;
+            }
+
+            let tableHtml = '<div class="overflow-x-auto my-3 rounded-xl border border-slate-200 shadow-2xs max-w-full bg-white">' +
+                            '<table class="w-full text-left text-xs divide-y divide-slate-200">';
+            
+            // Render thead
+            tableHtml += '<thead class="bg-slate-50 text-slate-700 font-semibold text-[11px] uppercase tracking-wider"><tr>';
+            headerCells.forEach(cell => {
+                tableHtml += `<th class="px-3 py-2.5 font-bold">${formatInlineMarkdown(cell)}</th>`;
+            });
+            tableHtml += '</tr></thead>';
+
+            // Render tbody
+            tableHtml += '<tbody class="divide-y divide-slate-100 bg-white">';
+            for (let i = startIndex; i < lines.length; i++) {
+                const cells = lines[i].split('|').slice(1, -1).map(c => c.trim());
+                tableHtml += '<tr class="hover:bg-slate-50/80 transition">';
+                cells.forEach(cell => {
+                    tableHtml += `<td class="px-3 py-2 text-slate-800 whitespace-nowrap">${formatInlineMarkdown(cell)}</td>`;
+                });
+                tableHtml += '</tr>';
+            }
+            tableHtml += '</tbody></table></div>';
+            return tableHtml;
+        });
+
+        // 2. Headings
+        text = text.replace(/^### (.*$)/gim, '<h3 class="text-sm font-bold text-navy mt-3 mb-1.5 flex items-center gap-1.5">$1</h3>');
+        text = text.replace(/^#### (.*$)/gim, '<h4 class="text-xs font-bold text-slate-800 mt-2.5 mb-1">$1</h4>');
+
+        // 3. Lists
+        text = text.replace(/^\s*[-*]\s+(.+)$/gm, '<li class="ml-4 list-disc text-slate-700 my-0.5">$1</li>');
+
+        // 4. Inline elements
+        text = formatInlineMarkdown(text);
+
+        // 5. Line breaks outside tables
+        text = text.replace(/\n\n/g, '<div class="my-2"></div>');
+        text = text.replace(/\n/g, '<br>');
+
+        return text;
+    }
+
+    function formatInlineMarkdown(str) {
+        if (!str) return '';
+
+        // Links: [text](url)
+        str = str.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-secondary font-semibold hover:underline" target="_self">$1</a>');
+
+        // Bold: **text**
+        str = str.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-navy">$1</strong>');
+
+        // Code: `code`
+        str = str.replace(/`([^`]+)`/g, '<code class="bg-slate-100 text-rose-600 px-1 py-0.5 rounded text-[11px] font-mono border border-slate-200/60">$1</code>');
+
+        return str;
+    }
+
+    function appendMessage(role, content, time = 'Just now', kpis = null) {
+        quickPromptsContainer.classList.add('hidden');
+        const isUser = role === 'user';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = `flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`;
+
+        const avatar = document.createElement('div');
+        avatar.className = `w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs ${
+            isUser ? 'bg-secondary text-white' : 'bg-gradient-to-tr from-[#102A43] to-secondary text-white'
+        }`;
+        avatar.textContent = isUser ? '👤' : 'N';
+
+        const bubbleContainer = document.createElement('div');
+        bubbleContainer.className = `max-w-3xl ${isUser ? 'items-end' : 'items-start'} flex flex-col w-full`;
+
+        // Optional KPI Cards Row
+        if (kpis && kpis.length > 0 && !isUser) {
+            const kpiRow = document.createElement('div');
+            kpiRow.className = "grid grid-cols-2 sm:grid-cols-3 gap-2 w-full mb-2";
+            kpis.forEach(k => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs flex flex-col";
+                card.innerHTML = `
+                    <span class="text-[10px] text-muted uppercase font-semibold tracking-wider">${k.label}</span>
+                    <span class="text-sm font-bold text-navy mt-0.5">${k.value}</span>
+                `;
+                kpiRow.appendChild(card);
+            });
+            bubbleContainer.appendChild(kpiRow);
+        }
+
+        const bubble = document.createElement('div');
+        bubble.className = `px-4 py-3.5 rounded-2xl text-xs leading-relaxed shadow-sm w-full ${
+            isUser 
+                ? 'bg-navy text-white rounded-tr-sm max-w-xl self-end' 
+                : 'bg-white border border-slate-200/90 text-slate-800 rounded-tl-sm'
+        }`;
+        bubble.innerHTML = isUser ? content.replace(/\n/g, '<br>') : formatMarkdown(content);
+
+        const meta = document.createElement('div');
+        meta.className = `text-[10px] text-muted mt-1 px-1 flex items-center gap-1.5 ${isUser ? 'text-right justify-end' : 'text-left'}`;
+        meta.innerHTML = isUser ? time : `<span>Natasha</span> &bull; <span>${time}</span>`;
+
+        bubbleContainer.appendChild(bubble);
+        bubbleContainer.appendChild(meta);
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(bubbleContainer);
+
+        messagesList.appendChild(wrapper);
+        messagesFeed.scrollTop = messagesFeed.scrollHeight;
+    }
+
+    function loadConversationMessages(conversationId) {
+        if (!conversationId) return;
+        messagesList.innerHTML = '';
+        typingIndicator.classList.remove('hidden');
+
+        fetch(`/chatbot/api/conversations/${conversationId}/messages/`)
+            .then(res => res.json())
+            .then(data => {
+                typingIndicator.classList.add('hidden');
+                if (data.success && data.messages.length > 0) {
+                    quickPromptsContainer.classList.add('hidden');
+                    data.messages.forEach(m => appendMessage(m.role, m.content, m.created_at));
+                } else {
+                    quickPromptsContainer.classList.remove('hidden');
+                }
+            })
+            .catch(err => {
+                typingIndicator.classList.add('hidden');
+                console.error("Error fetching messages:", err);
+            });
+    }
+
+    function selectConversation(id) {
+        activeConversationId = id;
+        document.querySelectorAll('.conv-item').forEach(el => {
+            if (el.dataset.id == id) {
+                el.className = 'conv-item group flex items-center justify-between p-2.5 rounded-lg text-xs cursor-pointer transition bg-teal-50/80 text-secondary font-semibold border border-teal-200/60';
+                const title = el.querySelector('.conv-title').textContent;
+                document.getElementById('activeChatTitle').textContent = title;
+            } else {
+                el.className = 'conv-item group flex items-center justify-between p-2.5 rounded-lg text-xs cursor-pointer transition text-slate-600 hover:bg-slate-50';
+            }
+        });
+        loadConversationMessages(id);
+    }
+
+    function handleChatSubmit(e) {
+        if (e) e.preventDefault();
+        const msg = userMessageInput.value.trim();
+        if (!msg) return;
+
+        userMessageInput.value = '';
+        userMessageInput.style.height = 'auto';
+
+        appendMessage('user', msg);
+
+        typingIndicator.classList.remove('hidden');
+        messagesFeed.scrollTop = messagesFeed.scrollHeight;
+        btnSend.disabled = true;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch("{% url 'chatbot_api_send' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                conversation_id: activeConversationId,
+                message: msg
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            typingIndicator.classList.add('hidden');
+            btnSend.disabled = false;
+
+            if (data.success) {
+                appendMessage('assistant', data.reply, data.created_at || 'Just now', data.kpis || null);
+                if (data.conversation_id) activeConversationId = data.conversation_id;
+                if (data.conversation_title) {
+                    document.getElementById('activeChatTitle').textContent = data.conversation_title;
+                    const activeConvItem = document.querySelector(`.conv-item[data-id="${data.conversation_id}"] .conv-title`);
+                    if (activeConvItem) activeConvItem.textContent = data.conversation_title;
+                }
+            } else {
+                appendMessage('assistant', `⚠️ **Error:** ${data.error || 'Failed to process request.'}`);
+            }
+        })
+        .catch(err => {
+            typingIndicator.classList.add('hidden');
+            btnSend.disabled = false;
+            appendMessage('assistant', `⚠️ **Network Error:** ${err.message}`);
+        });
+    }
+
+    function sendQuickPrompt(btn) {
+        const text = btn.querySelector('.text-\\[11px\\]').textContent.replace(/^"|"$/g, '');
+        userMessageInput.value = text;
+        handleChatSubmit(null);
+    }
+
+    document.getElementById('btnNewChat').addEventListener('click', function() {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch("{% url 'chatbot_api_new_conversation' %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) window.location.reload();
+        });
+    });
+
+    function deleteConversation(id, e) {
+        e.stopPropagation();
+        if (!confirm("Are you sure you want to delete this session?")) return;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch(`/chatbot/api/conversations/${id}/delete/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) window.location.reload();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (activeConversationId) {
+            loadConversationMessages(activeConversationId);
+        }
+    });
+</script>
+{% endblock %}
